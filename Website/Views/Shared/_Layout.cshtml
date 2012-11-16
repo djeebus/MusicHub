@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>MusicHub</title>
+        <link rel="Stylesheet" href="@Url.Content("~/content/site.less")" />
+    </head>
+    <body>
+        <header>
+            <h1>Music Hub</h1>
+            <div class="user">Hello, @this.User.Identity.Name (@Html.ActionLink("Profile", "Profile"))</div>
+            
+        </header>
+
+        <div id="content">
+            @RenderBody()
+        </div>
+        
+        @RenderSection("js", false)
+    </body>
+</html>

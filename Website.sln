@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Website", "Website\Website.csproj", "{69526B54-98EB-4FA5-8A77-32276D0FA7B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.Core", "MusicHub.Core\MusicHub.Core.csproj", "{041A5FE8-9561-4929-951C-0A861733EA68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.TagLibSharp", "MusicHub.TagLibSharp\MusicHub.TagLibSharp.csproj", "{7536DF7C-6BAA-4BFC-9A8A-F1618E78A0CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.ActiveDirectory", "MusicHub.ActiveDirectory\MusicHub.ActiveDirectory.csproj", "{455878F0-294B-476A-A400-F842657395A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.FMod", "MusicHub.FMod\MusicHub.FMod.csproj", "{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F4A77B2C-F2CB-4B8B-85B5-EB846AFA8C12}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69526B54-98EB-4FA5-8A77-32276D0FA7B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69526B54-98EB-4FA5-8A77-32276D0FA7B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69526B54-98EB-4FA5-8A77-32276D0FA7B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69526B54-98EB-4FA5-8A77-32276D0FA7B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{041A5FE8-9561-4929-951C-0A861733EA68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{041A5FE8-9561-4929-951C-0A861733EA68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{041A5FE8-9561-4929-951C-0A861733EA68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{041A5FE8-9561-4929-951C-0A861733EA68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7536DF7C-6BAA-4BFC-9A8A-F1618E78A0CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7536DF7C-6BAA-4BFC-9A8A-F1618E78A0CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7536DF7C-6BAA-4BFC-9A8A-F1618E78A0CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7536DF7C-6BAA-4BFC-9A8A-F1618E78A0CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{455878F0-294B-476A-A400-F842657395A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{455878F0-294B-476A-A400-F842657395A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{455878F0-294B-476A-A400-F842657395A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{455878F0-294B-476A-A400-F842657395A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
