@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace MusicHub.EntityFramework
+namespace MusicHub
 {
-    public class Class1
+    public interface IAuthenticationService
     {
+        User GetDetails(string username);
     }
 }

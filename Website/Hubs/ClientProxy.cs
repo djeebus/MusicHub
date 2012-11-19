@@ -11,7 +11,7 @@ namespace Website.Hubs
     {
         void updateCurrentSong(MusicHub.Song song);
         void updateActiveUsers(IEnumerable<MusicHub.User> users);
-        void updateStatus(MediaServerStatus status);
+        void updateStatus(MediaPlayerStatus status);
         void reportAddedSong(MusicHub.Song song);
         void log(string text);
     }
@@ -19,10 +19,10 @@ namespace Website.Hubs
     public class ClientProxy : IClientProxy
     {
         dynamic _clients;
-        IMediaServer _mediaServer;
+        IMediaPlayer _mediaServer;
         IMusicLibrary _musicRepository;
 
-        public ClientProxy(dynamic clients, IMediaServer mediaServer, IMusicLibrary musicRepository)
+        public ClientProxy(dynamic clients, IMediaPlayer mediaServer, IMusicLibrary musicRepository)
         {
             this._clients = clients;
             this._mediaServer = mediaServer;
@@ -75,7 +75,7 @@ namespace Website.Hubs
             this._clients.log(text);
         }
 
-        public void updateStatus(MediaServerStatus status)
+        public void updateStatus(MediaPlayerStatus status)
         {
             this._clients.updateStatus(new { status = status.ToString() });
         }

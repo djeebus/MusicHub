@@ -5,10 +5,10 @@ using System.Text;
 
 namespace MusicHub
 {
-	public interface IMediaServer
+	public interface IMediaPlayer
 	{
 		Song CurrentSong { get; }
-        MediaServerStatus Status { get; }
+        MediaPlayerStatus Status { get; }
 
 		void PlaySong(Song song);
 		void Stop();
@@ -26,7 +26,7 @@ namespace MusicHub
 		}
 	}
 
-    public enum MediaServerStatus
+    public enum MediaPlayerStatus
     {
         Playing,
         Stopped,

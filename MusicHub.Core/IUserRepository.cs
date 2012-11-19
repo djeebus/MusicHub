@@ -7,10 +7,8 @@ namespace MusicHub
 {
 	public interface IUserRepository
 	{
-		User Get(string username);
-		User ClientConnected(string username, string connectionId);
-        User ClientDisconnected(string connectionId);
-
-		IEnumerable<User> GetOnlineUsers();
-	}
+		User GetByName(string username);
+        User GetById(string userId);
+        IEnumerable<User> GetOnlineUsers();
+    }
 }

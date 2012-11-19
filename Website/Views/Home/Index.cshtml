@@ -13,6 +13,10 @@
         <li data-bind="text: display"></li>
     </script>
 
+    <script type="text/html" id="library-template">
+        <li data-bind="text: path"></li>
+    </script>
+
     <script type="text/html" id="log-row">
         <div data-bind="text: $value"></div>
     </script>
@@ -39,13 +43,18 @@
         <input type="button" name="music-control" value="skip" data-bind="visible: canSkip, click: next" />
         }
     </div>
-
 </div>
 
-<div class="users-container">
+<div id="users-container">
     <h1>Users</h1>
 
     <ul class="users" data-bind="template: { name: 'user-template', foreach: users }" />
+</div>
+
+<div id="libraries-container">
+    <h1>Libraries</h1>
+
+    <ul class="users" data-bind="template: { name: 'library-template', foreach: libraries }" />
 </div>
 
 <div class='status' data-bind="template: { name: 'log-row', foreach: log }"></div>

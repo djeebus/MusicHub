@@ -55,11 +55,18 @@ namespace Website.App_Start
         {
             kernel.Settings.AllowNullInjection = true;
 
-            kernel.Bind<MusicHub.IMetadataService>().To<MusicHub.TagLibSharp.TagLibSharpMetadataService>().InSingletonScope();
             kernel.Bind<MusicHub.IMusicLibrary>().To<MusicHub.Implementation.FileSystemMusicLibrary>().InSingletonScope();
-            kernel.Bind<MusicHub.IUserRepository>().To<MusicHub.ActiveDirectory.ActiveDirectoryUserRepository>().InSingletonScope();
-            kernel.Bind<MusicHub.IMediaServer>().To<MusicHub.FMod.FModMediaServer>().InSingletonScope();
             kernel.Bind<MusicHub.ISongSelector>().To<MusicHub.Implementation.DefaultSongSelector>().InSingletonScope();
+
+            kernel.Bind<MusicHub.IMetadataService>().To<MusicHub.TagLibSharp.TagLibSharpMetadataService>().InSingletonScope();
+            kernel.Bind<MusicHub.IAuthenticationService>().To<MusicHub.ActiveDirectory.ActiveDirectoryAuthenticationService>().InSingletonScope();
+            kernel.Bind<MusicHub.IMediaPlayer>().To<MusicHub.FMod.FModMediaServer>().InSingletonScope();
+
+            kernel.Bind<MusicHub.IConnectionRepository>().To<MusicHub.EntityFramework.ConnectionRepository>().InRequestScope();
+            kernel.Bind<MusicHub.ILibraryRepository>().To<MusicHub.EntityFramework.LibraryRepository>().InRequestScope();
+            kernel.Bind<MusicHub.EntityFramework.DbContext>().ToSelf().InRequestScope();
+            kernel.Bind<MusicHub.ISongRepository>().To<MusicHub.EntityFramework.SongRepository>().InRequestScope();
+            kernel.Bind<MusicHub.IUserRepository>().To<MusicHub.EntityFramework.UserRepository>().InRequestScope();
 
             // for HubDispatcher.ProcessRequestAsync()
             kernel.Bind<SignalR.Hubs.IJavaScriptProxyGenerator>().ToNull().InSingletonScope();
@@ -80,7 +87,7 @@ namespace Website.App_Start
             kernel.Bind<SignalR.Infrastructure.IServerIdManager>().ToNull().InSingletonScope();
         }
 
-        public class NinjectDependencyResolver : SignalR.DefaultDependencyResolver
+        public class NinjectDependencyResolver : global::SignalR.DefaultDependencyResolver
         {
             private readonly IKernel _kernel;
 

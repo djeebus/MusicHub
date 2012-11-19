@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MusicHub.FMod
 {
-	public class FModMediaServer : IMediaServer
+	public class FModMediaServer : IMediaPlayer
 	{
 		const int MAX_CHANNELS = 32;
 
@@ -121,11 +121,11 @@ namespace MusicHub.FMod
 				handler(this, new SongEventArgs(song));
 		}
 
-        public MediaServerStatus Status
+        public MediaPlayerStatus Status
         {
             get 
             {
-                return this.IsPlaying() ? MediaServerStatus.Playing : MediaServerStatus.Stopped; 
+                return this.IsPlaying() ? MediaPlayerStatus.Playing : MediaPlayerStatus.Stopped; 
             }
         }
     }

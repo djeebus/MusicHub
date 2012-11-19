@@ -41,13 +41,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IAffinityTracker.cs" />
-    <Compile Include="IMediaServer.cs" />
+    <Compile Include="IAuthenticationService.cs" />
+    <Compile Include="IConnectionRepository.cs" />
+    <Compile Include="ILibraryRepository.cs" />
+    <Compile Include="IMediaPlayer.cs" />
     <Compile Include="IMetadataService.cs" />
     <Compile Include="Implementation\DefaultSongSelector.cs" />
     <Compile Include="Implementation\FileSystemMusicLibrary.cs" />
     <Compile Include="IMusicLibrary.cs" />
+    <Compile Include="ISongRepository.cs" />
     <Compile Include="ISongSelector.cs" />
     <Compile Include="IUserRepository.cs" />
+    <Compile Include="Library.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="User.cs" />

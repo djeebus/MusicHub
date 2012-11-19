@@ -7,16 +7,16 @@ namespace MusicHub.Implementation
 {
 	public class DefaultSongSelector : ISongSelector
 	{
-		private readonly MusicHub.IMusicLibrary _musicRepository;
+		private readonly MusicHub.ISongRepository _songRepository;
 
-		public DefaultSongSelector(MusicHub.IMusicLibrary musicRepository)
+        public DefaultSongSelector(MusicHub.ISongRepository songRepository)
 		{
-			this._musicRepository = musicRepository;
+			this._songRepository = songRepository;
 		}
 
 		public Song GetRandomSong()
 		{
-			return this._musicRepository.GetRandomSong();
+			return this._songRepository.GetRandomSong();
 		}
 	}
 }

@@ -14,6 +14,7 @@ namespace Website.Hubs
 		void love();
 		void hate();
         void stop();
+        void createLibrary(string path);
 
 		IClientProxy ClientProxy { get; }
 	}
@@ -23,22 +24,86 @@ namespace Website.Hubs
 	{
 		private readonly MusicHub.IMusicLibrary _musicRepository;
 		private readonly MusicHub.IUserRepository _userRepository;
-		private readonly MusicHub.IMediaServer _mediaServer;
+		private readonly MusicHub.IMediaPlayer _mediaServer;
 		private readonly MusicHub.ISongSelector _songSelector;
+        private readonly MusicHub.ILibraryRepository _libraryRepository;
+        private readonly MusicHub.IConnectionRepository _connectionRepository;
 
 		public MusicControl(
 			MusicHub.IMusicLibrary musicRepository,
 			MusicHub.IUserRepository userRepository,
-			MusicHub.IMediaServer mediaServer,
-			MusicHub.ISongSelector songSelector)
+			MusicHub.IMediaPlayer mediaServer,
+			MusicHub.ISongSelector songSelector,
+            MusicHub.ILibraryRepository libraryRepository,
+            MusicHub.IConnectionRepository connectionRepository)
 		{
 			this._musicRepository = musicRepository;
 			this._userRepository = userRepository;
 			this._mediaServer = mediaServer;
 			this._songSelector = songSelector;
+            this._libraryRepository = libraryRepository;
+            this._connectionRepository = connectionRepository;
 		}
 
-		public void requestStatus()
+        public string UserId
+        {
+            get
+            {
+                var identity = Website.Models.MusicHubIdentity.CurrentIdentity;
+                if (identity == null)
+                    return null;
+
+                return identity.User.Id;
+            }
+        }
+
+        public System.Threading.Tasks.Task Disconnect()
+        {
+            var user = this._connectionRepository.ClientDisconnected(this.Context.ConnectionId);
+
+            this.ClientProxy.log(user.DisplayName + " has disconnected");
+
+            return null;
+        }
+
+        public System.Threading.Tasks.Task Connect()
+        {
+            var user = this._connectionRepository.ClientConnected(this.UserId, this.Context.ConnectionId);
+
+            this.ClientProxy.log(user.DisplayName + " has connected");
+
+            return null;
+        }
+
+        public System.Threading.Tasks.Task Reconnect(IEnumerable<string> groups)
+        {
+            this._connectionRepository.ClientConnected(this.UserId, this.Context.ConnectionId);
+
+            return null;
+        }
+
+        private static object locker = new object();
+        IClientProxy _clientProxy;
+        public IClientProxy ClientProxy
+        {
+            get 
+            {
+                if (_clientProxy != null)
+                    return _clientProxy;
+
+                lock (locker)
+                {
+                    if (_clientProxy != null)
+                        return _clientProxy;
+
+                    this._clientProxy = new ClientProxy(this.Clients, this._mediaServer, this._musicRepository);
+                }
+
+                return this._clientProxy;
+            }
+        }
+
+        public void requestStatus()
 		{
 			var users = this._userRepository.GetOnlineUsers();
 			this.ClientProxy.updateActiveUsers(users);
@@ -58,7 +123,7 @@ namespace Website.Hubs
 
 			this._mediaServer.PlaySong(nextSong);
 
-			var user = this._userRepository.Get(this.Context.User.Identity.Name);
+			var user = this._userRepository.GetByName(this.Context.User.Identity.Name);
 
             this.ClientProxy.log(user.DisplayName + " hates " + currentSong.Title + " by " + currentSong.Artist);
 		}
@@ -69,37 +134,9 @@ namespace Website.Hubs
 
 			this._mediaServer.PlaySong(song);
 
-			var user = _userRepository.Get(this.Context.User.Identity.Name);
+			var user = _userRepository.GetByName(this.Context.User.Identity.Name);
 
 			this.ClientProxy.log(user.DisplayName + " has started playing " + song.Title + " by " + song.Artist);
-		}
-
-		public System.Threading.Tasks.Task Disconnect()
-		{
-			var user = this._userRepository.ClientDisconnected(this.Context.ConnectionId);
-
-			this.ClientProxy.log(user.DisplayName + " has disconnected");
-
-			return null;
-		}
-
-		public System.Threading.Tasks.Task Connect()
-		{
-			var user = this._userRepository.ClientConnected(this.Context.User.Identity.Name, this.Context.ConnectionId);
-
-			this.ClientProxy.log(user.DisplayName + " has connected");
-
-			return null;
-		}
-
-		public System.Threading.Tasks.Task Reconnect(IEnumerable<string> groups)
-		{
-			this._userRepository.ClientConnected(this.Context.User.Identity.Name, this.Context.ConnectionId);
-
-			return null;
-			// not sure what to do here, seems to be really chatty though
-			//var user = this._userRepository.Get(this.Context.User.Identity.Name);
-			//return this.Clients.log(user.DisplayName + " has reconnected");
 		}
 
 		public void love()
@@ -111,9 +148,9 @@ namespace Website.Hubs
             this._mediaServer.Stop();
         }
 
-		public IClientProxy ClientProxy
-		{
-			get { return new ClientProxy(this.Clients, this._mediaServer, this._musicRepository); }
-		}
+        public void createLibrary(string path)
+        {
+            this._libraryRepository.Create(this.Context.User.Identity.Name, path);
+        }
     }
 }
