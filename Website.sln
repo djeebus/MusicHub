@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F4A77B
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.EntityFramework", "MusicHub.EntityFramework\MusicHub.EntityFramework.csproj", "{23B7AB97-DB47-4C45-B2D8-E3D2CDA42EAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23B7AB97-DB47-4C45-B2D8-E3D2CDA42EAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23B7AB97-DB47-4C45-B2D8-E3D2CDA42EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23B7AB97-DB47-4C45-B2D8-E3D2CDA42EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23B7AB97-DB47-4C45-B2D8-E3D2CDA42EAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -7,9 +7,9 @@ namespace MusicHub.Implementation
 {
 	public class DefaultSongSelector : ISongSelector
 	{
-		private readonly MusicHub.IMusicRepository _musicRepository;
+		private readonly MusicHub.IMusicLibrary _musicRepository;
 
-		public DefaultSongSelector(MusicHub.IMusicRepository musicRepository)
+		public DefaultSongSelector(MusicHub.IMusicLibrary musicRepository)
 		{
 			this._musicRepository = musicRepository;
 		}

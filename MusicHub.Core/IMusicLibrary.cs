@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MusicHub
 {
-	public interface IMusicRepository
+	public interface IMusicLibrary
 	{
         event EventHandler<SongEventArgs> SongAdded;
 
