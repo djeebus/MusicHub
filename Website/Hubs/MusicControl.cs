@@ -21,13 +21,13 @@ namespace Website.Hubs
     [HubName("musicControl")]
 	public class MusicControl : Hub, IDisconnect, IConnected, IMusicControl
 	{
-		private readonly MusicHub.IMusicRepository _musicRepository;
+		private readonly MusicHub.IMusicLibrary _musicRepository;
 		private readonly MusicHub.IUserRepository _userRepository;
 		private readonly MusicHub.IMediaServer _mediaServer;
 		private readonly MusicHub.ISongSelector _songSelector;
 
 		public MusicControl(
-			MusicHub.IMusicRepository musicRepository,
+			MusicHub.IMusicLibrary musicRepository,
 			MusicHub.IUserRepository userRepository,
 			MusicHub.IMediaServer mediaServer,
 			MusicHub.ISongSelector songSelector)

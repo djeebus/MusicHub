@@ -20,9 +20,9 @@ namespace Website.Hubs
     {
         dynamic _clients;
         IMediaServer _mediaServer;
-        IMusicRepository _musicRepository;
+        IMusicLibrary _musicRepository;
 
-        public ClientProxy(dynamic clients, IMediaServer mediaServer, IMusicRepository musicRepository)
+        public ClientProxy(dynamic clients, IMediaServer mediaServer, IMusicLibrary musicRepository)
         {
             this._clients = clients;
             this._mediaServer = mediaServer;

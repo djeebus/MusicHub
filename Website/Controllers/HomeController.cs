@@ -8,9 +8,9 @@ namespace Website.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly MusicHub.IMusicRepository _musicRepository;
+		private readonly MusicHub.IMusicLibrary _musicRepository;
 
-		public HomeController(MusicHub.IMusicRepository musicRepository)
+		public HomeController(MusicHub.IMusicLibrary musicRepository)
 		{
 			this._musicRepository = musicRepository;
 		}

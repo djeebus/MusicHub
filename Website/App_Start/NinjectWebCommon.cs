@@ -56,7 +56,7 @@ namespace Website.App_Start
             kernel.Settings.AllowNullInjection = true;
 
             kernel.Bind<MusicHub.IMetadataService>().To<MusicHub.TagLibSharp.TagLibSharpMetadataService>().InSingletonScope();
-            kernel.Bind<MusicHub.IMusicRepository>().To<Website.MusicRepository>().InSingletonScope();
+            kernel.Bind<MusicHub.IMusicLibrary>().To<MusicHub.Implementation.FileSystemMusicLibrary>().InSingletonScope();
             kernel.Bind<MusicHub.IUserRepository>().To<MusicHub.ActiveDirectory.ActiveDirectoryUserRepository>().InSingletonScope();
             kernel.Bind<MusicHub.IMediaServer>().To<MusicHub.FMod.FModMediaServer>().InSingletonScope();
             kernel.Bind<MusicHub.ISongSelector>().To<MusicHub.Implementation.DefaultSongSelector>().InSingletonScope();

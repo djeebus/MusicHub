@@ -3,24 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Website
+namespace MusicHub.Implementation
 {
-	public class MusicRepository : MusicHub.IMusicRepository
+	public class FileSystemMusicLibrary : MusicHub.IMusicLibrary
 	{
 		private static readonly object locker = new object();
 		private static readonly Random random = new Random();
-
-        static string RootFolder = @"C:\Music";
 
 		private readonly MusicHub.IMetadataService _metadataService;
 
 		private static List<MusicHub.Song> songs = null;
 
-		public MusicRepository(MusicHub.IMetadataService metadataService)
+		public FileSystemMusicLibrary(string rootFolder, MusicHub.IMetadataService metadataService)
 		{
 			this._metadataService = metadataService;
 
-			var files = System.IO.Directory.GetFiles(RootFolder, "*.mp3", System.IO.SearchOption.AllDirectories);
+			var files = System.IO.Directory.GetFiles(rootFolder, "*.mp3", System.IO.SearchOption.AllDirectories);
 
 			if (songs == null)
 			{
