@@ -29,6 +29,7 @@ namespace MusicHub.EntityFramework
             return (from l in dbLibraries.ToArray()
                     select new Library
                     {
+                        Id = l.Id.ToString(),
                         Path = l.Path,
                         UserId = l.UserId.ToString(),
                     }).ToArray();

@@ -7,6 +7,8 @@ namespace MusicHub
 {
     public class Library
     {
+        public string Id { get; set; }
+
         public string UserId { get; set; }
 
         public string Path { get; set; }

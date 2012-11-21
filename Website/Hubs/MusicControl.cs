@@ -22,7 +22,6 @@ namespace Website.Hubs
     [HubName("musicControl")]
 	public class MusicControl : Hub, IDisconnect, IConnected, IMusicControl
 	{
-		private readonly MusicHub.IMusicLibrary _musicRepository;
 		private readonly MusicHub.IUserRepository _userRepository;
 		private readonly MusicHub.IMediaPlayer _mediaServer;
 		private readonly MusicHub.ISongSelector _songSelector;
@@ -30,14 +29,12 @@ namespace Website.Hubs
         private readonly MusicHub.IConnectionRepository _connectionRepository;
 
 		public MusicControl(
-			MusicHub.IMusicLibrary musicRepository,
 			MusicHub.IUserRepository userRepository,
 			MusicHub.IMediaPlayer mediaServer,
 			MusicHub.ISongSelector songSelector,
             MusicHub.ILibraryRepository libraryRepository,
             MusicHub.IConnectionRepository connectionRepository)
 		{
-			this._musicRepository = musicRepository;
 			this._userRepository = userRepository;
 			this._mediaServer = mediaServer;
 			this._songSelector = songSelector;
@@ -59,18 +56,14 @@ namespace Website.Hubs
 
         public System.Threading.Tasks.Task Disconnect()
         {
-            var user = this._connectionRepository.ClientDisconnected(this.Context.ConnectionId);
-
-            this.ClientProxy.log(user.DisplayName + " has disconnected");
+            this._connectionRepository.ClientDisconnected(this.Context.ConnectionId);
 
             return null;
         }
 
         public System.Threading.Tasks.Task Connect()
         {
-            var user = this._connectionRepository.ClientConnected(this.UserId, this.Context.ConnectionId);
-
-            this.ClientProxy.log(user.DisplayName + " has connected");
+            this._connectionRepository.ClientConnected(this.UserId, this.Context.ConnectionId);
 
             return null;
         }
@@ -96,7 +89,7 @@ namespace Website.Hubs
                     if (_clientProxy != null)
                         return _clientProxy;
 
-                    this._clientProxy = new ClientProxy(this.Clients, this._mediaServer, this._musicRepository);
+                    this._clientProxy = new ClientProxy(this.Clients, this._mediaServer);
                 }
 
                 return this._clientProxy;
@@ -107,6 +100,9 @@ namespace Website.Hubs
 		{
 			var users = this._userRepository.GetOnlineUsers();
 			this.ClientProxy.updateActiveUsers(users);
+
+            var libraries = this._libraryRepository.GetLibrariesForUser(this.UserId);
+            this.ClientProxy.updateLibraries(libraries);
 
 			var song = this._mediaServer.CurrentSong;
 			this.ClientProxy.updateCurrentSong(song);
@@ -130,13 +126,11 @@ namespace Website.Hubs
 
 		public void enqueueSong(string id)
 		{
-			var song = _musicRepository.GetSong(id);
+            //this._mediaServer.PlaySong(song);
 
-			this._mediaServer.PlaySong(song);
+            //var user = _userRepository.GetByName(this.Context.User.Identity.Name);
 
-			var user = _userRepository.GetByName(this.Context.User.Identity.Name);
-
-			this.ClientProxy.log(user.DisplayName + " has started playing " + song.Title + " by " + song.Artist);
+            //this.ClientProxy.log(user.DisplayName + " has started playing " + song.Title + " by " + song.Artist);
 		}
 
 		public void love()

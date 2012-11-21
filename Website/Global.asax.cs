@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Configuration;
+using System.Threading;
+using System.Security.Principal;
 
 namespace Website
 {
@@ -23,14 +25,43 @@ namespace Website
 
 		protected void Application_Start()
 		{
-			AreaRegistration.RegisterAllAreas();
+            App_Start.SignalRStart.Start(); 
+            
+            AreaRegistration.RegisterAllAreas();
 
 			RegisterGlobalFilters(GlobalFilters.Filters);
 
 			BundleTable.Bundles.RegisterTemplateBundles();
 
-            App_Start.MusicHubStart.Start(this);
+            App_Start.WebApi.Start(RouteTable.Routes);
             App_Start.Routes.Register(RouteTable.Routes);
+
+            App_Start.MusicHubStart.Start(this);
 		}
+
+        protected void Application_PostAuthenticateRequest(object sender, EventArgs e)
+        {
+            var currentPrincipal = Thread.CurrentPrincipal;
+
+            if (!currentPrincipal.Identity.IsAuthenticated)
+                return;
+
+            if (!(currentPrincipal.Identity is WindowsIdentity))
+                throw new ArgumentOutOfRangeException("currentPrincipal.Identity", currentPrincipal.Identity.GetType().ToString(), "Unknown identity");
+
+            var userRepository = DependencyResolver.Current.GetService<MusicHub.IUserRepository>();
+            var user = userRepository.GetByName(currentPrincipal.Identity.Name);
+            if (user == null)
+            {
+                var authService = DependencyResolver.Current.GetService<MusicHub.IAuthenticationService>();
+                var displayName = authService.GetDisplayName(currentPrincipal.Identity.Name);
+                if (displayName == null)
+                    throw new ArgumentOutOfRangeException("currentPrincipal.Identity.Name", currentPrincipal.Identity.Name, "Unknown user");
+
+                user = userRepository.Create(currentPrincipal.Identity.Name, displayName);
+            }
+
+            Thread.CurrentPrincipal = new Models.MusicHubPrincipal(user);
+        }
 	}
 }

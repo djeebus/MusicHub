@@ -8,30 +8,9 @@ namespace MusicHub.ActiveDirectory
 {
 	public class ActiveDirectoryAuthenticationService : IAuthenticationService
 	{
-		static readonly Dictionary<string, User> cache = new Dictionary<string, User>();
-
-        public User GetDetails(string username)
+        public string GetDisplayName(string username)
         {
-            if (!cache.ContainsKey(username))
-            {
-                lock (cache)
-                {
-                    if (!cache.ContainsKey(username))
-                    {
-                        var name = GetFullNameFromActiveDirectory(username);
-
-                        var user = new User
-                        {
-                            DisplayName = name,
-                            Username = username,
-                        };
-
-                        cache.Add(username, user);
-                    }
-                }
-            }
-
-            return cache[username];
+            return GetFullNameFromActiveDirectory(username);
         }
         
         private static string GetFullNameFromActiveDirectory(string username)

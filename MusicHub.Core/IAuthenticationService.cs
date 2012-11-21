@@ -7,6 +7,6 @@ namespace MusicHub
 {
     public interface IAuthenticationService
     {
-        User GetDetails(string username);
+        string GetDisplayName(string username);
     }
 }

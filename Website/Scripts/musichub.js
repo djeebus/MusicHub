@@ -1,7 +1,13 @@
 ﻿(function ($) {
+    function libraryModel(library) {
+        this.id = library.id;
+        this.path = library.path;
+    }
+
     function viewModel() {
 		this.songs = ko.observable([]);
 		this.users = ko.observable([]);
+		this.libraries = ko.observable([]);
 
 		this.currentSongTitle = ko.observable();
 		this.currentSongArtist = ko.observable();
@@ -27,27 +33,36 @@
             musicControl.hate();
         }
 
+        this.canSkip = ko.observable(false);
         this.next = function () {
             musicControl.next();
         }
 
         this.initMusicControl = function() {
-            var musicControl = $.connection.musicControl;
+            var mcHub = $.connection.musicControl;
 
-            musicControl.log = function (text) {
+            mcHub.log = function (text) {
                 model.log.append(text);
             };
 
-            musicControl.updateActiveUsers = function (data) {
+            mcHub.updateActiveUsers = function (data) {
                 model.users(data.users);
             };
 
-            musicControl.updateCurrentSong = function (data) {
+            mcHub.updateCurrentSong = function (data) {
                 model.currentSongTitle(data.song.title);
                 model.currentSongArtist(data.song.artist);
             };
 
-            musicControl.updateStatus = function (data) {
+            mcHub.updateLibraries = function (data) {
+                var models = [];
+                for (var x = 0; x < data.length; x++) {
+                    models.push(new libraryModel(data[x]));
+                }
+                model.libraries(models);
+            };
+
+            mcHub.updateStatus = function (data) {
                 var isPlaying = data.status == 'playing';
                 model.canPlay(!isPlaying);
                 model.canStop(isPlaying);
@@ -56,10 +71,10 @@
             }
 
             $.connection.hub.start(function () {
-                musicControl.requestStatus();
+                mcHub.requestStatus();
             });
 
-            return musicControl;
+            return mcHub;
         }
 
         var musicControl = this.initMusicControl();

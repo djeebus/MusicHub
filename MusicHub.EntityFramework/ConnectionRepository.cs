@@ -15,14 +15,32 @@ namespace MusicHub.EntityFramework
             this._db = db;
         }
 
-        public User ClientConnected(string userId, string connectionId)
+        public void ClientConnected(string userId, string connectionId)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentNullException("userId");
+
+            Guid guid = Guid.Parse(userId);
+
+            var dbConnection = new DbConnection
+            {
+                Id = Guid.NewGuid(),
+                SignalRConnectionId = connectionId,
+                UserId = guid,
+            };
+
+            this._db.Connections.Add(dbConnection);
+            this._db.SaveChanges();
         }
 
-        public User ClientDisconnected(string connectionId)
+        public void ClientDisconnected(string connectionId)
         {
-            throw new NotImplementedException();
+            var matched = this._db.Connections.Where(c => c.SignalRConnectionId == connectionId);
+
+            foreach (var item in matched)
+                this._db.Connections.Remove(item);
+
+            this._db.SaveChanges();
         }
     }
 }

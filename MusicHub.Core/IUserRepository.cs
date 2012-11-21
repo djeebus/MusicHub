@@ -9,6 +9,8 @@ namespace MusicHub
 	{
 		User GetByName(string username);
         User GetById(string userId);
-        IEnumerable<User> GetOnlineUsers();
+        User[] GetOnlineUsers();
+
+        User Create(string username, string displayName);
     }
 }

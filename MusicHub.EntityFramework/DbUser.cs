@@ -20,10 +20,13 @@ namespace MusicHub.EntityFramework
         [Required]
         public string DisplayName { get; set; }
 
+        public virtual ICollection<DbConnection> Connections { get; set; }
+
         internal User ToModel()
         {
             return new User
             {
+                Id = this.Id.ToString(),
                 DisplayName = this.DisplayName,
                 Username = this.Username,
             };

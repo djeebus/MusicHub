@@ -7,7 +7,7 @@ namespace MusicHub
 {
     public interface IConnectionRepository
     {
-        User ClientConnected(string userId, string connectionId);
-        User ClientDisconnected(string connectionId);
+        void ClientConnected(string userId, string connectionId);
+        void ClientDisconnected(string connectionId);
     }
 }

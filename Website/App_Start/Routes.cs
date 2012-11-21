@@ -7,17 +7,11 @@ using System.Web.Mvc;
 
 namespace Website.App_Start
 {
-    public class Routes
+    public static class Routes
     {
         internal static void Register(System.Web.Routing.RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
-            routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );
 
             routes.MapRoute(
                 name: "Default",

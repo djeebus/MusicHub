@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectionRepository.cs" />
+    <Compile Include="DbConnection.cs" />
     <Compile Include="DbContext.cs" />
     <Compile Include="DbSong.cs" />
     <Compile Include="DbUser.cs" />

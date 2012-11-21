@@ -55,7 +55,6 @@ namespace Website.App_Start
         {
             kernel.Settings.AllowNullInjection = true;
 
-            kernel.Bind<MusicHub.IMusicLibrary>().To<MusicHub.Implementation.FileSystemMusicLibrary>().InSingletonScope();
             kernel.Bind<MusicHub.ISongSelector>().To<MusicHub.Implementation.DefaultSongSelector>().InSingletonScope();
 
             kernel.Bind<MusicHub.IMetadataService>().To<MusicHub.TagLibSharp.TagLibSharpMetadataService>().InSingletonScope();
@@ -71,7 +70,7 @@ namespace Website.App_Start
             // for HubDispatcher.ProcessRequestAsync()
             kernel.Bind<SignalR.Hubs.IJavaScriptProxyGenerator>().ToNull().InSingletonScope();
             kernel.Bind<SignalR.Hubs.IHubManager>().ToNull().InSingletonScope();
-            kernel.Bind<SignalR.Hubs.IHubActivator>().ToNull().InSingletonScope();
+            kernel.Bind<SignalR.Hubs.IHubActivator>().To<NinjectHubActivator>().InSingletonScope();
             kernel.Bind<SignalR.IDependencyResolver>().ToNull().InSingletonScope();
             kernel.Bind<SignalR.Hubs.IJavaScriptMinifier>().ToNull().InSingletonScope();
             kernel.Bind<SignalR.Hubs.IParameterResolver>().ToNull().InSingletonScope();
@@ -85,31 +84,6 @@ namespace Website.App_Start
             kernel.Bind<SignalR.Transports.ITransportHeartBeat>().ToNull().InSingletonScope();
             kernel.Bind<SignalR.IConfigurationManager>().ToNull().InSingletonScope();
             kernel.Bind<SignalR.Infrastructure.IServerIdManager>().ToNull().InSingletonScope();
-        }
-
-        public class NinjectDependencyResolver : global::SignalR.DefaultDependencyResolver
-        {
-            private readonly IKernel _kernel;
-
-            public NinjectDependencyResolver(IKernel kernel)
-            {
-                this._kernel = kernel;
-            }
-
-            public override object GetService(Type serviceType)
-            {
-                try 
-                { 
-                    var ob = this._kernel.Get(serviceType);
-                    if (ob != null)
-                        return ob;
-                }
-                catch
-                {
-                }
-
-                return base.GetService(serviceType);
-            }
         }
     }
 

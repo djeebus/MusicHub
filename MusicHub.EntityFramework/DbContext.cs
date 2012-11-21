@@ -11,10 +11,11 @@ namespace MusicHub.EntityFramework
     {
         static DbContext()
         {
-            Database.SetInitializer(new System.Data.Entity.CreateDatabaseIfNotExists<DbContext>());
+            Database.SetInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<DbContext>());
         }
 
         public DbSet<DbUser> Users { get; set; }
+        public DbSet<DbConnection> Connections { get; set; }
         public DbSet<DbLibrary> Libraries { get; set; }
         public DbSet<DbSong> Songs { get; set; }
     }

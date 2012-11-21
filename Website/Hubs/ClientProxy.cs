@@ -9,27 +9,26 @@ namespace Website.Hubs
 {
     public interface IClientProxy
     {
+        void reportAddedSong(MusicHub.Song song);
+        void log(string text);
+
         void updateCurrentSong(MusicHub.Song song);
         void updateActiveUsers(IEnumerable<MusicHub.User> users);
         void updateStatus(MediaPlayerStatus status);
-        void reportAddedSong(MusicHub.Song song);
-        void log(string text);
+        void updateLibraries(Library[] libraries);
     }
 
     public class ClientProxy : IClientProxy
     {
         dynamic _clients;
         IMediaPlayer _mediaServer;
-        IMusicLibrary _musicRepository;
 
-        public ClientProxy(dynamic clients, IMediaPlayer mediaServer, IMusicLibrary musicRepository)
+        public ClientProxy(dynamic clients, IMediaPlayer mediaServer)
         {
             this._clients = clients;
             this._mediaServer = mediaServer;
-            this._musicRepository = musicRepository;
 
             this._mediaServer.SongStarted += _mediaServer_SongStarted;
-            this._musicRepository.SongAdded += _musicRepository_SongAdded;
         }
 
         void _musicRepository_SongAdded(object sender, SongEventArgs e)
@@ -89,6 +88,20 @@ namespace Website.Hubs
             {
                 title = song.Title,
                 artist = song.Artist,
+            };
+        }
+
+        public void updateLibraries(Library[] libraries)
+        {
+            this._clients.updateLibraries(libraries.Select(ConvertLibrary));
+        }
+
+        private object ConvertLibrary(Library library)
+        {
+            return new
+            {
+                id = library.Id,
+                path = library.Path,
             };
         }
     }

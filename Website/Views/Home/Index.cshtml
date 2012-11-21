@@ -1,10 +1,12 @@
 ﻿@model System.Collections.Generic.IEnumerable<MusicHub.Song>
 
 @section js {
-    <script type="text/javascript" src="~/scripts/knockout-2.2.0.debug.js"></script>
-
     <script type="text/javascript" src="~/scripts/jquery-1.8.2.js"></script>
     <script type="text/javascript" src="~/scripts/jquery.signalr-0.5.3.js"></script>
+    <script type="text/javascript" src="~/scripts/jquery.validate.js"></script>
+    <script type="text/javascript" src="~/scripts/jquery.validate.unobtrusive.js"></script>
+
+    <script type="text/javascript" src="~/scripts/knockout-2.2.0.debug.js"></script>
 
     <script type="text/javascript" src="~/signalr/hubs"></script>
     <script type="text/javascript" src="~/scripts/musichub.js"></script>
@@ -55,6 +57,13 @@
     <h1>Libraries</h1>
 
     <ul class="users" data-bind="template: { name: 'library-template', foreach: libraries }" />
+
+    <form id="create-library" action="Home/AddLibrary" method="post">
+        <label for="new-library-path">Add shared folder:</label>
+        <input type="text" id="new-library-path" name="path" data-bind="newLibraryPath" data-val="true" data-val-required="Path is required" data-val-regex="Must begin with '\\'" data-val-regex-pattern="^\\\\.*" />
+        <input type="submit" value="Add" />
+        <span data-valmsg-for="path" data-valmsg-replace="true"></span>
+    </form>
 </div>
 
 <div class='status' data-bind="template: { name: 'log-row', foreach: log }"></div>

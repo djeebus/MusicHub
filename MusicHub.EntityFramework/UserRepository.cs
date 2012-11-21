@@ -29,24 +29,37 @@ namespace MusicHub.EntityFramework
 
         public User GetById(string userId)
         {
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentNullException("userId");
+
             var guid = Guid.Parse(userId);
 
             return this._db.Users.FirstOrDefault(u => u.Id == guid).ToModel();
         }
 
-        public User ClientConnected(string userId, string connectionId)
+        public User[] GetOnlineUsers()
         {
-            throw new NotImplementedException();
+            var onlineUsers = from u in this._db.Users
+                              where u.Connections.Count() > 0
+                              select u;
+
+            return (from u in onlineUsers.ToArray()
+                    select u.ToModel()).ToArray();
         }
 
-        public User ClientDisconnected(string connectionId)
+        public User Create(string username, string displayName)
         {
-            throw new NotImplementedException();
-        }
+            var dbUser = new DbUser
+            {
+                Id = Guid.NewGuid(),
+                DisplayName = displayName,
+                Username = username,
+            };
 
-        public IEnumerable<User> GetOnlineUsers()
-        {
-            throw new NotImplementedException();
+            this._db.Users.Add(dbUser);
+            this._db.SaveChanges();
+
+            return dbUser.ToModel();
         }
     }
 }
