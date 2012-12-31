@@ -30,12 +30,26 @@ namespace MusicHub.EntityFramework
                     select new Library
                     {
                         Id = l.Id.ToString(),
-                        Path = l.Path,
-                        UserId = l.UserId.ToString(),
+                        Name = GetName(l),
                     }).ToArray();
         }
 
-        public void Create(string userId, string path)
+        private string GetName(DbLibrary l)
+        {
+            switch (l.Type)
+            {
+                case LibraryType.SharedFolder:
+                    return l.Path;
+
+                case LibraryType.GoogleMusic:
+                    return l.Username;
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public void Create(string userId, LibraryType type, string path, string username, string password)
         {
             var guid = Guid.Parse(userId);
 
@@ -43,10 +57,25 @@ namespace MusicHub.EntityFramework
             {
                 Id = Guid.NewGuid(),
                 Path = path,
+                Username = username,
+                Password = password,
+                Type = type,
                 UserId = guid,
             };
 
             this._db.Libraries.Add(dbLibrary);
+            this._db.SaveChanges();
+        }
+
+        public void Delete(string libraryId)
+        {
+            var guid = Guid.Parse(libraryId);
+
+            var dbLibrary = this._db.Libraries.FirstOrDefault(l => l.Id == guid);
+            if (dbLibrary == null)
+                throw new ArgumentOutOfRangeException("libraryId", libraryId, "Unknown library");
+
+            this._db.Libraries.Remove(dbLibrary);
             this._db.SaveChanges();
         }
     }

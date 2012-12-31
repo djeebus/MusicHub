@@ -101,7 +101,7 @@ namespace Website.Hubs
             return new
             {
                 id = library.Id,
-                path = library.Path,
+                name = library.Name,
             };
         }
     }

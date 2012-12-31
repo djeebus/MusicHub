@@ -91,6 +91,9 @@ namespace MusicHub.FMod
 
         private bool IsPlaying()
         {
+            if (channel == null)
+                return false;
+
             var playing = false;
 
             var result = channel.isPlaying(ref playing);

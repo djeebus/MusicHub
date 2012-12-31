@@ -16,7 +16,13 @@
     </script>
 
     <script type="text/html" id="library-template">
-        <li data-bind="text: path"></li>
+        <li>
+            <span data-bind="text: name"></span>
+            <form method="post" action="/Home/RemoveLibrary">
+                <input type="hidden" name="libraryId" data-bind="value: id" />
+                <input type="submit" value="remove" />
+            </form>
+        </li>
     </script>
 
     <script type="text/html" id="log-row">
@@ -56,11 +62,22 @@
 <div id="libraries-container">
     <h1>Libraries</h1>
 
-    <ul class="users" data-bind="template: { name: 'library-template', foreach: libraries }" />
+    <ul class="libraries" data-bind="template: { name: 'library-template', foreach: libraries }" />
 
-    <form id="create-library" action="Home/AddLibrary" method="post">
+    <form id="create-shared-folder-library" action="Home/AddSharedFolderLibrary" method="post">
         <label for="new-library-path">Add shared folder:</label>
-        <input type="text" id="new-library-path" name="path" data-bind="newLibraryPath" data-val="true" data-val-required="Path is required" data-val-regex="Must begin with '\\'" data-val-regex-pattern="^\\\\.*" />
+        <input type="text" id="new-library-path" name="path" data-bind="newLibraryPath" placeholder="path"
+               data-val="true" data-val-required="Path is required" data-val-regex="Must begin with '\\'" data-val-regex-pattern="^\\\\.*" />
+        <input type="submit" value="Add" />
+        <span data-valmsg-for="path" data-valmsg-replace="true"></span>
+    </form>
+
+    <form id="create-google-music-library" action="Home/AddGoogleMusic" method="post">
+        <label for="new-library-path">Add Google Music account:</label>
+        <input type="text" name="username" placeholder="username"
+               data-val="true" data-val-required="Username is required" />
+        <input type="password" name="password" placeholder="password"
+               data-val="true" data-val-required="Password is required" />
         <input type="submit" value="Add" />
         <span data-valmsg-for="path" data-valmsg-replace="true"></span>
     </form>

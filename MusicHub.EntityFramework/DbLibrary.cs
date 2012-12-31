@@ -17,7 +17,11 @@ namespace MusicHub.EntityFramework
         public Guid UserId { get; set; }
         public virtual DbUser User { get; set; }
 
-        [Required]
+        [Column("TypeId")]
+        public LibraryType Type { get; set; }
+
         public string Path { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

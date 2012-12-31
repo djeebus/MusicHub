@@ -32,9 +32,26 @@ namespace Website.Controllers
 			return this.View();
 		}
 
-        public RedirectToRouteResult AddLibrary(string path)
+        [HttpPost]
+        public RedirectToRouteResult AddGoogleMusic(string username, string password)
         {
-            this._libraryRepository.Create(this.UserId, path);
+            this._libraryRepository.Create(this.UserId, MusicHub.LibraryType.GoogleMusic, null, username, password);
+
+            return this.RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public RedirectToRouteResult AddSharedFolderLibrary(string path)
+        {
+            this._libraryRepository.Create(this.UserId, MusicHub.LibraryType.SharedFolder, path, null, null);
+
+            return this.RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public RedirectToRouteResult RemoveLibrary(string libraryId)
+        {
+            this._libraryRepository.Delete(libraryId);
 
             return this.RedirectToAction("Index");
         }

@@ -1,7 +1,7 @@
 ﻿(function ($) {
     function libraryModel(library) {
         this.id = library.id;
-        this.path = library.path;
+        this.name = library.name;
     }
 
     function viewModel() {
@@ -17,28 +17,28 @@
 		this.canPlay = ko.observable(false);
 		this.canStop = ko.observable(false);
 
-        this.play = function () {
-            musicControl.play();
-        }
+		this.play = function () {
+		    musicControl.play();
+		};
 
         this.stop = function () {
             musicControl.stop();
-        }
+        };
 
         this.love = function () {
             musicControl.love();
-        }
+        };
 
         this.hate = function () {
             musicControl.hate();
-        }
+        };
 
         this.canSkip = ko.observable(false);
         this.next = function () {
             musicControl.next();
-        }
+        };
 
-        this.initMusicControl = function() {
+        this.initMusicControl = function () {
             var mcHub = $.connection.musicControl;
 
             mcHub.log = function (text) {
@@ -63,19 +63,19 @@
             };
 
             mcHub.updateStatus = function (data) {
-                var isPlaying = data.status == 'playing';
+                var isPlaying = data.status === 'playing';
                 model.canPlay(!isPlaying);
                 model.canStop(isPlaying);
 
                 model.currentStatus(data.status);
-            }
+            };
 
             $.connection.hub.start(function () {
                 mcHub.requestStatus();
             });
 
             return mcHub;
-        }
+        };
 
         var musicControl = this.initMusicControl();
 	}

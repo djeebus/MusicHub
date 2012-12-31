@@ -14,7 +14,8 @@ namespace Website.Hubs
 		void love();
 		void hate();
         void stop();
-        void createLibrary(string path);
+        void createSharedFolderLibrary(string path);
+        void createGoogleMusicLibrary(string username, string password);
 
 		IClientProxy ClientProxy { get; }
 	}
@@ -142,9 +143,14 @@ namespace Website.Hubs
             this._mediaServer.Stop();
         }
 
-        public void createLibrary(string path)
+        public void createSharedFolderLibrary(string path)
         {
-            this._libraryRepository.Create(this.Context.User.Identity.Name, path);
+            this._libraryRepository.Create(this.Context.User.Identity.Name, MusicHub.LibraryType.SharedFolder, path, null, null);
+        }
+
+        public void createGoogleMusicLibrary(string username, string password)
+        {
+            this._libraryRepository.Create(this.Context.User.Identity.Name, MusicHub.LibraryType.GoogleMusic, null, username, password);
         }
     }
 }

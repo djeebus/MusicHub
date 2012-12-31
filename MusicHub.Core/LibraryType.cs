@@ -5,10 +5,9 @@ using System.Text;
 
 namespace MusicHub
 {
-    public class Library
+    public enum LibraryType : byte
     {
-        public string Id { get; set; }
-
-        public string Name { get; set; }
+        SharedFolder = 1,
+        GoogleMusic = 2,
     }
 }
