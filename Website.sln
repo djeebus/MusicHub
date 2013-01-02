@@ -20,6 +20,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F4A77B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.EntityFramework", "MusicHub.EntityFramework\MusicHub.EntityFramework.csproj", "{23B7AB97-DB47-4C45-B2D8-E3D2CDA42EAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.ConsoleApp", "MusicHub.ConsoleApp\MusicHub.ConsoleApp.csproj", "{BC53E95B-74B0-4E94-B932-0C184F1D8103}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.GooglePlay", "MusicHub.GooglePlay\MusicHub.GooglePlay.csproj", "{A373CB67-DF1B-443F-BC41-C58FF0652BD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,7 +31,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{69526B54-98EB-4FA5-8A77-32276D0FA7B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69526B54-98EB-4FA5-8A77-32276D0FA7B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69526B54-98EB-4FA5-8A77-32276D0FA7B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69526B54-98EB-4FA5-8A77-32276D0FA7B1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{041A5FE8-9561-4929-951C-0A861733EA68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -50,6 +53,14 @@ Global
 		{23B7AB97-DB47-4C45-B2D8-E3D2CDA42EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23B7AB97-DB47-4C45-B2D8-E3D2CDA42EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23B7AB97-DB47-4C45-B2D8-E3D2CDA42EAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC53E95B-74B0-4E94-B932-0C184F1D8103}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC53E95B-74B0-4E94-B932-0C184F1D8103}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC53E95B-74B0-4E94-B932-0C184F1D8103}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC53E95B-74B0-4E94-B932-0C184F1D8103}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A373CB67-DF1B-443F-BC41-C58FF0652BD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A373CB67-DF1B-443F-BC41-C58FF0652BD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A373CB67-DF1B-443F-BC41-C58FF0652BD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A373CB67-DF1B-443F-BC41-C58FF0652BD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

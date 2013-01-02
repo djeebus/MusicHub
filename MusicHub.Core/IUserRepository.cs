@@ -12,5 +12,6 @@ namespace MusicHub
         User[] GetOnlineUsers();
 
         User Create(string username, string displayName);
+        User EnsureUser(string username, string displayName);
     }
 }

@@ -15,7 +15,7 @@ namespace Website.Hubs
         void updateCurrentSong(MusicHub.Song song);
         void updateActiveUsers(IEnumerable<MusicHub.User> users);
         void updateStatus(MediaPlayerStatus status);
-        void updateLibraries(Library[] libraries);
+        void updateLibraries(LibraryInfo[] libraries);
     }
 
     public class ClientProxy : IClientProxy
@@ -91,17 +91,18 @@ namespace Website.Hubs
             };
         }
 
-        public void updateLibraries(Library[] libraries)
+        public void updateLibraries(LibraryInfo[] libraries)
         {
             this._clients.updateLibraries(libraries.Select(ConvertLibrary));
         }
 
-        private object ConvertLibrary(Library library)
+        private object ConvertLibrary(LibraryInfo library)
         {
             return new
             {
                 id = library.Id,
                 name = library.Name,
+                songCount = library.TotalSongs,
             };
         }
     }

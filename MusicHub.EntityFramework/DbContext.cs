@@ -11,7 +11,7 @@ namespace MusicHub.EntityFramework
     {
         static DbContext()
         {
-            Database.SetInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<DbContext>());
+            Database.SetInitializer(new DbContextInitializer());
         }
 
         public DbSet<DbUser> Users { get; set; }

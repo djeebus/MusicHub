@@ -14,10 +14,10 @@ namespace MusicHub.EntityFramework
         [Column("UserId")]
         public Guid Id { get; set; }
 
-        [Required]
+        [Required, StringLength(100)]
         public string Username { get; set; }
 
-        [Required]
+        [Required, StringLength(100)]
         public string DisplayName { get; set; }
 
         public virtual ICollection<DbConnection> Connections { get; set; }

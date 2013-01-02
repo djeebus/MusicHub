@@ -7,73 +7,36 @@ namespace MusicHub.Implementation
 {
 	public class FileSystemMusicLibrary : MusicHub.IMusicLibrary
 	{
-		private static readonly object locker = new object();
-		private static readonly Random random = new Random();
-
 		private readonly MusicHub.IMetadataService _metadataService;
 
-		private static List<MusicHub.Song> songs = null;
+        public string LibraryId { get; private set; }
 
-		public FileSystemMusicLibrary(string rootFolder, MusicHub.IMetadataService metadataService)
+        private readonly string _rootFolder;
+
+		public FileSystemMusicLibrary(string libraryId, string rootFolder, MusicHub.IMetadataService metadataService)
 		{
+            this.LibraryId = libraryId;
 			this._metadataService = metadataService;
-
-			var files = System.IO.Directory.GetFiles(rootFolder, "*.mp3", System.IO.SearchOption.AllDirectories);
-
-			if (songs == null)
-			{
-				lock (locker)
-				{
-					if (songs == null)
-					{
-						var temp = new List<MusicHub.Song>();
-						int index = 0;
-						foreach (var f in files)
-						{
-							var s = this._metadataService.GetSongFromFilename(f);
-
-							s.Id = (index++).ToString();
-							s.Filename = f;
-
-							temp.Add(s);
-
-                            this.OnSongAdded(s);
-						}
-
-						songs = temp;
-					}
-				}
-			}
+            this._rootFolder = rootFolder;
 		}
 
-        private void OnSongAdded(MusicHub.Song s)
+        public string GetSongUrl(string externalId)
         {
-            var handler = this.SongAdded;
-            if (handler != null)
-                handler(this, new MusicHub.SongEventArgs(s));
+            return externalId;
         }
-
-		public MusicHub.Song GetSong(string id)
-		{
-			var index = int.Parse(id);
-
-			return songs[index];
-		}
 
 		public IEnumerable<MusicHub.Song> GetSongs()
 		{
-			return songs;
-		}
+            var files = System.IO.Directory.GetFiles(this._rootFolder, "*.mp3", System.IO.SearchOption.AllDirectories);
 
-		public MusicHub.Song GetRandomSong()
-		{
-			var totalSongs = songs.Count;
+            foreach (var f in files)
+            {
+                var s = this._metadataService.GetSongFromFilename(f);
 
-			var index = random.Next(totalSongs);
+                s.ExternalId = f;
 
-			return songs[index];
-		}
-
-        public event EventHandler<MusicHub.SongEventArgs> SongAdded;
+                yield return s;
+            }
+        }
     }
 }

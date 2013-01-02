@@ -2,6 +2,7 @@
     function libraryModel(library) {
         this.id = library.id;
         this.name = library.name;
+        this.songCount = library.songCount;
     }
 
     function viewModel() {
@@ -16,6 +17,7 @@
 
 		this.canPlay = ko.observable(false);
 		this.canStop = ko.observable(false);
+		this.canSkip = ko.observable(false);
 
 		this.play = function () {
 		    musicControl.play();
@@ -33,7 +35,6 @@
             musicControl.hate();
         };
 
-        this.canSkip = ko.observable(false);
         this.next = function () {
             musicControl.next();
         };
@@ -63,9 +64,10 @@
             };
 
             mcHub.updateStatus = function (data) {
-                var isPlaying = data.status === 'playing';
+                var isPlaying = data.status === 'Playing';
                 model.canPlay(!isPlaying);
                 model.canStop(isPlaying);
+                model.canSkip(isPlaying);
 
                 model.currentStatus(data.status);
             };

@@ -7,9 +7,11 @@ namespace MusicHub
 {
     public interface ILibraryRepository
     {
-        Library[] GetLibrariesForUser(string userId);
-        void Create(string userId, LibraryType type, string path, string username, string password);
-
+        LibraryInfo[] GetLibraries();
+        LibraryInfo[] GetLibrariesForUser(string userId);
+        LibraryInfo GetLibrary(string libraryId);
+        LibraryInfo Create(string userId, LibraryType type, string path, string username, string password);
         void Delete(string libraryId);
+        void UpdateLastSyncDate(string libraryId);
     }
 }

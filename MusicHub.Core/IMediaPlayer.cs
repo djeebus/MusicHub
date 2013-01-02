@@ -10,10 +10,11 @@ namespace MusicHub
 		Song CurrentSong { get; }
         MediaPlayerStatus Status { get; }
 
-		void PlaySong(Song song);
+		void PlaySong(Song song, string mediaUrl);
 		void Stop();
 
 		event EventHandler<SongEventArgs> SongStarted;
+        event EventHandler<StatusEventArgs> StatusChanged;
 	}
 
 	public class SongEventArgs : EventArgs
@@ -26,9 +27,20 @@ namespace MusicHub
 		}
 	}
 
+    public class StatusEventArgs : EventArgs
+    {
+        public MediaPlayerStatus Status { get; private set; }
+
+        public StatusEventArgs(MediaPlayerStatus status)
+        {
+            this.Status = status;
+        }
+    }
+
     public enum MediaPlayerStatus
     {
         Playing,
+        SongFinished,
         Stopped,
     }
 }

@@ -47,6 +47,15 @@ namespace MusicHub.EntityFramework
                     select u.ToModel()).ToArray();
         }
 
+        public User EnsureUser(string username, string displayName)
+        {
+            var user = this.GetByName(username);
+            if (user != null)
+                return user;
+
+            return Create(username, displayName);
+        }
+
         public User Create(string username, string displayName)
         {
             var dbUser = new DbUser

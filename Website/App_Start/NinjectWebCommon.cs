@@ -55,17 +55,18 @@ namespace Website.App_Start
         {
             kernel.Settings.AllowNullInjection = true;
 
-            kernel.Bind<MusicHub.ISongSelector>().To<MusicHub.Implementation.DefaultSongSelector>().InSingletonScope();
-
             kernel.Bind<MusicHub.IMetadataService>().To<MusicHub.TagLibSharp.TagLibSharpMetadataService>().InSingletonScope();
             kernel.Bind<MusicHub.IAuthenticationService>().To<MusicHub.ActiveDirectory.ActiveDirectoryAuthenticationService>().InSingletonScope();
-            kernel.Bind<MusicHub.IMediaPlayer>().To<MusicHub.FMod.FModMediaServer>().InSingletonScope();
+            kernel.Bind<MusicHub.IMediaPlayer>().To<MusicHub.FMod.FModMediaServer>().InSingletonScope()
+                .OnActivation(SubscribeToStatusChanges);
 
             kernel.Bind<MusicHub.IConnectionRepository>().To<MusicHub.EntityFramework.ConnectionRepository>().InRequestScope();
             kernel.Bind<MusicHub.ILibraryRepository>().To<MusicHub.EntityFramework.LibraryRepository>().InRequestScope();
             kernel.Bind<MusicHub.EntityFramework.DbContext>().ToSelf().InRequestScope();
             kernel.Bind<MusicHub.ISongRepository>().To<MusicHub.EntityFramework.SongRepository>().InRequestScope();
             kernel.Bind<MusicHub.IUserRepository>().To<MusicHub.EntityFramework.UserRepository>().InRequestScope();
+            kernel.Bind<MusicHub.SongSpider>().ToSelf().InSingletonScope();
+            kernel.Bind<Models.MediaLibraryFactory>().ToSelf().InRequestScope();
 
             // for HubDispatcher.ProcessRequestAsync()
             kernel.Bind<SignalR.Hubs.IJavaScriptProxyGenerator>().ToNull().InSingletonScope();
@@ -84,6 +85,17 @@ namespace Website.App_Start
             kernel.Bind<SignalR.Transports.ITransportHeartBeat>().ToNull().InSingletonScope();
             kernel.Bind<SignalR.IConfigurationManager>().ToNull().InSingletonScope();
             kernel.Bind<SignalR.Infrastructure.IServerIdManager>().ToNull().InSingletonScope();
+        }
+
+        private static void SubscribeToStatusChanges(Ninject.Activation.IContext arg1, MusicHub.FMod.FModMediaServer mediaServer)
+        {
+            mediaServer.StatusChanged += (s,e) => {
+                var hub = SignalR.GlobalHost.ConnectionManager.GetHubContext<Website.Hubs.MusicControl>();
+
+                var clientProxy = new Website.Hubs.ClientProxy(hub.Clients, mediaServer);
+
+                clientProxy.updateStatus(e.Status);
+            };
         }
     }
 

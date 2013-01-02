@@ -7,10 +7,8 @@ namespace MusicHub
 {
 	public interface IMusicLibrary
 	{
-        event EventHandler<SongEventArgs> SongAdded;
-
+        string LibraryId { get; }
 		IEnumerable<Song> GetSongs();
-		Song GetSong(string id);
-		Song GetRandomSong();
+        string GetSongUrl(string externalId);
 	}
 }

@@ -25,22 +25,25 @@ namespace Website.Hubs
 	{
 		private readonly MusicHub.IUserRepository _userRepository;
 		private readonly MusicHub.IMediaPlayer _mediaServer;
-		private readonly MusicHub.ISongSelector _songSelector;
         private readonly MusicHub.ILibraryRepository _libraryRepository;
         private readonly MusicHub.IConnectionRepository _connectionRepository;
+        private readonly MusicHub.ISongRepository _songRepository;
+        private readonly Website.Models.MediaLibraryFactory _mediaLibraryFactory;
 
 		public MusicControl(
 			MusicHub.IUserRepository userRepository,
 			MusicHub.IMediaPlayer mediaServer,
-			MusicHub.ISongSelector songSelector,
             MusicHub.ILibraryRepository libraryRepository,
-            MusicHub.IConnectionRepository connectionRepository)
+            MusicHub.IConnectionRepository connectionRepository,
+            MusicHub.ISongRepository songRepository,
+            Website.Models.MediaLibraryFactory mediaLibraryFactory)
 		{
 			this._userRepository = userRepository;
 			this._mediaServer = mediaServer;
-			this._songSelector = songSelector;
             this._libraryRepository = libraryRepository;
             this._connectionRepository = connectionRepository;
+            this._songRepository = songRepository;
+            this._mediaLibraryFactory = mediaLibraryFactory;
 		}
 
         public string UserId
@@ -116,14 +119,23 @@ namespace Website.Hubs
 		{
             var currentSong = this._mediaServer.CurrentSong;
 
-			var nextSong = this._songSelector.GetRandomSong();
-
-			this._mediaServer.PlaySong(nextSong);
+            PlayNextSong();
 
 			var user = this._userRepository.GetByName(this.Context.User.Identity.Name);
 
             this.ClientProxy.log(user.DisplayName + " hates " + currentSong.Title + " by " + currentSong.Artist);
 		}
+
+        private void PlayNextSong()
+        {
+            var nextSong = this._songRepository.GetRandomSong();
+
+            var mediaLibrary = this._mediaLibraryFactory.GetLibrary(nextSong.LibraryId);
+
+            var songUrl = mediaLibrary.GetSongUrl(nextSong.ExternalId);
+
+            this._mediaServer.PlaySong(nextSong, songUrl);
+        }
 
 		public void enqueueSong(string id)
 		{
@@ -137,6 +149,11 @@ namespace Website.Hubs
 		public void love()
 		{
 		}
+
+        public void play()
+        {
+            PlayNextSong();
+        }
 
         public void stop()
         {

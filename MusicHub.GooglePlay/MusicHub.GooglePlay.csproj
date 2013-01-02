@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{23B7AB97-DB47-4C45-B2D8-E3D2CDA42EAD}</ProjectGuid>
+    <ProjectGuid>{A373CB67-DF1B-443F-BC41-C58FF0652BD7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MusicHub.EntityFramework</RootNamespace>
-    <AssemblyName>MusicHub.EntityFramework</AssemblyName>
+    <RootNamespace>MusicHub.GooglePlay</RootNamespace>
+    <AssemblyName>MusicHub.GooglePlay</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -32,13 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,27 +45,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConnectionRepository.cs" />
-    <Compile Include="DbConnection.cs" />
-    <Compile Include="DbContext.cs" />
-    <Compile Include="DbSong.cs" />
-    <Compile Include="DbUser.cs" />
-    <Compile Include="DbLibrary.cs" />
-    <Compile Include="LibraryRepository.cs" />
-    <Compile Include="DbContextInitializer.cs" />
-    <Compile Include="SongRepository.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="GoogleMusicClient.cs" />
+    <Compile Include="GoogleMusicMusicLibrary.cs" />
+    <Compile Include="InvalidCredentialsException.cs" />
+    <Compile Include="LoadAllTracksResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserRepository.cs" />
+    <Compile Include="Song.cs" />
+    <Compile Include="SongUrl.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MusicHub.Core\MusicHub.Core.csproj">
       <Project>{041a5fe8-9561-4929-951c-0a861733ea68}</Project>
       <Name>MusicHub.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

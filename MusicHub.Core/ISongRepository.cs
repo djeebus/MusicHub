@@ -7,8 +7,10 @@ namespace MusicHub
 {
     public interface ISongRepository
     {
-        void UpsertSong(Song song);
+        Song UpsertSong(string libraryId, string externalId, string artist, string title, string album, uint? track, uint? year);
 
         Song GetRandomSong();
+
+        void PruneSongs(string libraryId);
     }
 }

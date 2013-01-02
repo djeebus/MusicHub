@@ -159,6 +159,7 @@
     <Compile Include="App_Start\Routes.cs" />
     <Compile Include="App_Start\SignalRStart.cs" />
     <Compile Include="App_Start\WebApi.cs" />
+    <Compile Include="Models\MediaLibraryFactory.cs" />
     <Compile Include="Models\MusicHubIdentity.cs" />
     <Compile Include="Models\MusicHubPrincipal.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />

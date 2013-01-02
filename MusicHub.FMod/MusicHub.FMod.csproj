@@ -45,7 +45,7 @@
     <Compile Include="Api\fmod_errors.cs" />
     <Compile Include="Api\fmod_memoryinfo.cs" />
     <Compile Include="FmodException.cs" />
-    <Compile Include="FModMediaServer.cs" />
+    <Compile Include="FModMediaPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -39,6 +39,13 @@ namespace Website
             App_Start.MusicHubStart.Start(this);
 		}
 
+        protected void Application_End()
+        {
+            var player = DependencyResolver.Current.GetService<MusicHub.IMediaPlayer>();
+
+            player.Stop();
+        }
+
         protected void Application_PostAuthenticateRequest(object sender, EventArgs e)
         {
             var currentPrincipal = Thread.CurrentPrincipal;

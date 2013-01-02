@@ -9,10 +9,17 @@ namespace Website.Controllers
 	public class HomeController : Controller
 	{
         private readonly MusicHub.ILibraryRepository _libraryRepository;
+        private readonly Models.MediaLibraryFactory _mediaLibraryFactory;
+        private readonly MusicHub.SongSpider _songSpider;
 
-		public HomeController(MusicHub.ILibraryRepository libraryRepository)
+		public HomeController(
+            MusicHub.ILibraryRepository libraryRepository, 
+            Models.MediaLibraryFactory mediaLibraryFactory, 
+            MusicHub.SongSpider songSpider)
 		{
             this._libraryRepository = libraryRepository;
+            this._mediaLibraryFactory = mediaLibraryFactory;
+            this._songSpider = songSpider;
 		}
 
         public string UserId
@@ -52,6 +59,16 @@ namespace Website.Controllers
         public RedirectToRouteResult RemoveLibrary(string libraryId)
         {
             this._libraryRepository.Delete(libraryId);
+
+            return this.RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public RedirectToRouteResult ResyncLibrary(string libraryId)
+        {
+            var library = _mediaLibraryFactory.GetLibrary(libraryId);
+
+            _songSpider.QueueLibrary(library);
 
             return this.RedirectToAction("Index");
         }

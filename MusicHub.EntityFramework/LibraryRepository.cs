@@ -18,38 +18,25 @@ namespace MusicHub.EntityFramework
             this._db = db;
         }
 
-        public Library[] GetLibrariesForUser(string userId)
+        public LibraryInfo[] GetLibraries()
+        {
+            return (from l in _db.Libraries.AsEnumerable()
+                    select l.ToModel()).ToArray();
+        }
+
+        public LibraryInfo[] GetLibrariesForUser(string userId)
         {
             Guid guid = Guid.Parse(userId);
 
-            var dbLibraries = from l in this._db.Libraries
+            var dbLibraries = from l in this._db.Libraries.AsNoTracking()
                               where l.UserId == guid
                               select l;
 
             return (from l in dbLibraries.ToArray()
-                    select new Library
-                    {
-                        Id = l.Id.ToString(),
-                        Name = GetName(l),
-                    }).ToArray();
+                    select l.ToModel()).ToArray();
         }
 
-        private string GetName(DbLibrary l)
-        {
-            switch (l.Type)
-            {
-                case LibraryType.SharedFolder:
-                    return l.Path;
-
-                case LibraryType.GoogleMusic:
-                    return l.Username;
-
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
-        public void Create(string userId, LibraryType type, string path, string username, string password)
+        public LibraryInfo Create(string userId, LibraryType type, string path, string username, string password)
         {
             var guid = Guid.Parse(userId);
 
@@ -65,6 +52,8 @@ namespace MusicHub.EntityFramework
 
             this._db.Libraries.Add(dbLibrary);
             this._db.SaveChanges();
+
+            return dbLibrary.ToModel();
         }
 
         public void Delete(string libraryId)
@@ -77,6 +66,30 @@ namespace MusicHub.EntityFramework
 
             this._db.Libraries.Remove(dbLibrary);
             this._db.SaveChanges();
+        }
+
+        public void UpdateLastSyncDate(string libraryId)
+        {
+            var guid = Guid.Parse(libraryId);
+
+            var dbLibrary = this._db.Libraries.FirstOrDefault(l => l.Id == guid);
+            if (dbLibrary == null)
+                throw new ArgumentOutOfRangeException("libraryId", libraryId, "Library ID does not exist");
+
+            dbLibrary.LastSync = DateTime.Now;
+
+            this._db.SaveChanges();
+        }
+
+        public LibraryInfo GetLibrary(string libraryId)
+        {
+            var guid = Guid.Parse(libraryId);
+
+            var dbLibrary = this._db.Libraries.AsNoTracking().FirstOrDefault(l => l.Id == guid);
+            if (dbLibrary == null)
+                return null;
+
+            return dbLibrary.ToModel();
         }
     }
 }

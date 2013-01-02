@@ -17,10 +17,18 @@
 
     <script type="text/html" id="library-template">
         <li>
-            <span data-bind="text: name"></span>
+            <div>
+                <span data-bind="text: name"></span>
+                (<span data-bind="text: songCount"></span>
+                songs)
+            </div>
             <form method="post" action="/Home/RemoveLibrary">
                 <input type="hidden" name="libraryId" data-bind="value: id" />
                 <input type="submit" value="remove" />
+            </form>
+            <form method="post" action="/Home/ResyncLibrary">
+                <input type="hidden" name="libraryId" data-bind="value: id" />
+                <input type="submit" value="resync" />
             </form>
         </li>
     </script>
@@ -44,14 +52,18 @@
         <span class="progress"></span>
         <input type="button" name="music-control" value="hate" data-bind="click: hate" />
         <input type="button" name="music-control" value="love" data-bind="click: love" />
+    </div>
+</div>
 
-        @if (this.Request.IsLocal) {
+@if (this.Request.IsLocal) {
+    <div class="admin-controls">
+        <h2>Admin controls</h2>
         <input type="button" name="music-control" value="stop" data-bind="visible: canStop, click: stop" />
         <input type="button" name="music-control" value="play" data-bind="visible: canPlay, click: play" />
         <input type="button" name="music-control" value="skip" data-bind="visible: canSkip, click: next" />
-        }
     </div>
-</div>
+}
+    
 
 <div id="users-container">
     <h1>Users</h1>
