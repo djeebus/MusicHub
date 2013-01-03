@@ -43,7 +43,7 @@ namespace MusicHub.ConsoleApp
             switch (e.Status)
             {
                 case MediaPlayerStatus.SongFinished:
-                    //this.PlayNextSong(); // triggers even if a song was intentionally skipped
+                    this.PlayNextSong(); // triggers even if a song was intentionally skipped
                     break;
             }
         }
@@ -93,11 +93,33 @@ namespace MusicHub.ConsoleApp
             //this.ChatCommandProcessors.Add("next", ProcessChatCommandNextSong);
             this.ChatCommandProcessors.Add("hate", ProcessChatCommandHateSong);
             this.ChatCommandProcessors.Add("stop", ProcessChatCommandStop);
-            //this.ChatCommandProcessors.Add("play", ProcessChatCommandNextSong);
+            this.ChatCommandProcessors.Add("play", ProcessChatCommandPlay);
+        }
+
+        private void ProcessChatCommandPlay(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
+        {
+            var replyTarget = GetDefaultReplyTarget(client, source, targets);
+
+            var status = this._mediaPlayer.Status;
+            if (status == MediaPlayerStatus.Playing)
+            {
+                client.LocalUser.SendMessage(replyTarget, "Music is already playing - stop being redundant!");
+                return;
+            }
+
+            //client.LocalUser.SendMessage(replyTarget, "Music has started playing");
+            SayInChannels(string.Format("{0} has started playing music", source.Name));
+
+            this.PlayNextSong();
         }
 
         private void ProcessChatCommandStop(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
         {
+            var replyTarget = GetDefaultReplyTarget(client, source, targets);
+
+            //client.LocalUser.SendMessage(replyTarget, "Music has been stopped");
+            SayInChannels(string.Format("{0} has stopped the music", source.Name));
+
             this._mediaPlayer.Stop();
         }
 
@@ -130,6 +152,8 @@ namespace MusicHub.ConsoleApp
             var library = CreateLibrary(libraryInfo);
 
             _spider.QueueLibrary(library);
+
+            client.LocalUser.SendMessage(replyTarget, "Library sync has been queued");
         }
 
         private void InvalidSyncLibraryCommand(IrcDotNet.IrcClient client, IList<IrcDotNet.IIrcMessageTarget> replyTarget, string commandError)
@@ -151,6 +175,8 @@ namespace MusicHub.ConsoleApp
             var currentSong = _mediaPlayer.CurrentSong;
             if (currentSong == null)
                 throw new ArgumentNullException("currentSong");
+
+            SayInChannels(string.Format("{0} hates the current song", source.Name));
 
             PlayNextSong();
         }

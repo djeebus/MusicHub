@@ -17,7 +17,7 @@ namespace MusicHub.ConsoleApp
             this.Bind<IUserRepository>().To<EntityFramework.UserRepository>().InThreadScope();
             this.Bind<ISongRepository>().To<EntityFramework.SongRepository>().InThreadScope();
             this.Bind<ILibraryRepository>().To<EntityFramework.LibraryRepository>().InThreadScope();
-            this.Bind<IMediaPlayer>().To<FMod.FModMediaPlayer>().InSingletonScope();
+            this.Bind<IMediaPlayer>().To<BassNet.BassNetMediaPlayer>().InSingletonScope();
         }
     }
 }

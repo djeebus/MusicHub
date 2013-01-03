@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.ConsoleApp", "Musi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.GooglePlay", "MusicHub.GooglePlay\MusicHub.GooglePlay.csproj", "{A373CB67-DF1B-443F-BC41-C58FF0652BD7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.BassNet", "MusicHub.BassNet\MusicHub.BassNet.csproj", "{C07ED5AC-5953-4333-802E-D2640BDE701D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{A373CB67-DF1B-443F-BC41-C58FF0652BD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A373CB67-DF1B-443F-BC41-C58FF0652BD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A373CB67-DF1B-443F-BC41-C58FF0652BD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C07ED5AC-5953-4333-802E-D2640BDE701D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C07ED5AC-5953-4333-802E-D2640BDE701D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C07ED5AC-5953-4333-802E-D2640BDE701D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C07ED5AC-5953-4333-802E-D2640BDE701D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -156,7 +156,9 @@ namespace MusicHub.FMod
             var stream = result.Item1;
 
             if (pos != 0)
-                throw new ArgumentOutOfRangeException("pos", pos, "Unable to seek");
+            {
+                //throw new ArgumentOutOfRangeException("pos", pos, "Unable to seek");
+            }
 
             return FMOD.RESULT.OK;
         }

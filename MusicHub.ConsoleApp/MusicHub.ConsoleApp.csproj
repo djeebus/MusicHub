@@ -70,6 +70,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MusicHub.BassNet\MusicHub.BassNet.csproj">
+      <Project>{c07ed5ac-5953-4333-802e-d2640bde701d}</Project>
+      <Name>MusicHub.BassNet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MusicHub.Core\MusicHub.Core.csproj">
       <Project>{041a5fe8-9561-4929-951c-0a861733ea68}</Project>
       <Name>MusicHub.Core</Name>
@@ -77,10 +81,6 @@
     <ProjectReference Include="..\MusicHub.EntityFramework\MusicHub.EntityFramework.csproj">
       <Project>{23b7ab97-db47-4c45-b2d8-e3d2cda42ead}</Project>
       <Name>MusicHub.EntityFramework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MusicHub.FMod\MusicHub.FMod.csproj">
-      <Project>{04e4cc43-3ea9-4905-b8cd-87d22025cce9}</Project>
-      <Name>MusicHub.FMod</Name>
     </ProjectReference>
     <ProjectReference Include="..\MusicHub.GooglePlay\MusicHub.GooglePlay.csproj">
       <Project>{a373cb67-df1b-443f-bc41-c58ff0652bd7}</Project>
