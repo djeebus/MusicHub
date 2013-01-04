@@ -19,11 +19,11 @@ namespace MusicHub.ConsoleApp
             this.Bind<IMetadataService>().To<TagLibSharp.TagLibSharpMetadataService>().InSingletonScope();
 
             // EntityFramework
-            this.Bind<EntityFramework.DbContext>().ToSelf().InThreadScope();
-            this.Bind<IAffinityTracker>().To<EntityFramework.AffinityTracker>().InThreadScope();
-            this.Bind<IUserRepository>().To<EntityFramework.UserRepository>().InThreadScope();
-            this.Bind<ISongRepository>().To<EntityFramework.SongRepository>().InThreadScope();
-            this.Bind<ILibraryRepository>().To<EntityFramework.LibraryRepository>().InThreadScope();
+            this.Bind<EntityFramework.DbContext>().ToSelf().InTransientScope();
+            this.Bind<IAffinityTracker>().To<EntityFramework.AffinityTracker>().InTransientScope();
+            this.Bind<IUserRepository>().To<EntityFramework.UserRepository>().InTransientScope();
+            this.Bind<ISongRepository>().To<EntityFramework.SongRepository>().InTransientScope();
+            this.Bind<ILibraryRepository>().To<EntityFramework.LibraryRepository>().InTransientScope();
             
             // BassNet
             this.Bind<IMediaPlayer>().To<BassNet.BassNetMediaPlayer>().InSingletonScope();
