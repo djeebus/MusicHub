@@ -18,5 +18,6 @@ namespace MusicHub.EntityFramework
         public DbSet<DbConnection> Connections { get; set; }
         public DbSet<DbLibrary> Libraries { get; set; }
         public DbSet<DbSong> Songs { get; set; }
+        public DbSet<DbSongAffinity> SongAffinities { get; set; }
     }
 }

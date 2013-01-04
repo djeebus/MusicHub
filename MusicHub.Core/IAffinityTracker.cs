@@ -7,7 +7,7 @@ namespace MusicHub
 {
 	public interface IAffinityTracker
 	{
-		void Record(User user, Song song, Affinity affinity);
+		void Record(string userId, string songId, Affinity affinity);
 	}
 
 	public enum Affinity

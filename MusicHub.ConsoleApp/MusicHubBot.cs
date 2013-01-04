@@ -10,57 +10,26 @@ namespace MusicHub.ConsoleApp
 {
     public class MusicHubBot : IrcBot
     {
-        private readonly ILibraryRepository _libraryRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMediaPlayer _mediaPlayer;
-        private readonly ISongRepository _songRepository;
-        private readonly IMetadataService _metadataService;
-        private readonly SongSpider _spider;
+        private readonly IJukebox _jukebox;
 
         public MusicHubBot(
+            IJukebox jukebox,
             ILibraryRepository libraryRepository, 
             IUserRepository userRepository, 
             IMediaPlayer mediaPlayer,
             ISongRepository songRepository,
-            IMetadataService metadataService,
-            SongSpider spider)
+            IMetadataService metadataService)
         {
-            _libraryRepository = libraryRepository;
+            _jukebox = jukebox;
             _userRepository = userRepository;
             _mediaPlayer = mediaPlayer;
-            _songRepository = songRepository;
-            _metadataService = metadataService;
-            _spider = spider;
 
-            _mediaPlayer.SongStarted += _mediaPlayer_SongStarted;
-            _mediaPlayer.StatusChanged += _mediaPlayer_StatusChanged;
-
-            this.SpiderAllLibraries();
+            _jukebox.SongStarted += _jukebox_SongStarted;
         }
 
-        void _mediaPlayer_StatusChanged(object sender, StatusEventArgs e)
-        {
-            switch (e.Status)
-            {
-                case MediaPlayerStatus.SongFinished:
-                    this.PlayNextSong(); // triggers even if a song was intentionally skipped
-                    break;
-            }
-        }
-
-        private void SpiderAllLibraries()
-        {
-            var libraries = _libraryRepository.GetLibraries();
-
-            foreach (var libraryInfo in libraries)
-            {
-                var library = CreateLibrary(libraryInfo);
-
-                this._spider.QueueLibrary(library);
-            }
-        }
-
-        void _mediaPlayer_SongStarted(object sender, SongEventArgs e)
+        void _jukebox_SongStarted(object sender, SongEventArgs e)
         {
             var msg = string.Format("Now playing: {0} by {1}", e.Song.Title, e.Song.Artist);
 
@@ -100,17 +69,7 @@ namespace MusicHub.ConsoleApp
         {
             var replyTarget = GetDefaultReplyTarget(client, source, targets);
 
-            var status = this._mediaPlayer.Status;
-            if (status == MediaPlayerStatus.Playing)
-            {
-                client.LocalUser.SendMessage(replyTarget, "Music is already playing - stop being redundant!");
-                return;
-            }
-
-            //client.LocalUser.SendMessage(replyTarget, "Music has started playing");
-            SayInChannels(string.Format("{0} has started playing music", source.Name));
-
-            this.PlayNextSong();
+            _jukebox.Play();
         }
 
         private void ProcessChatCommandStop(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
@@ -120,12 +79,12 @@ namespace MusicHub.ConsoleApp
             //client.LocalUser.SendMessage(replyTarget, "Music has been stopped");
             SayInChannels(string.Format("{0} has stopped the music", source.Name));
 
-            this._mediaPlayer.Stop();
+            this._jukebox.Stop();
         }
 
         private void ProcessChatCommandNextSong(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
         {
-            this.PlayNextSong();
+            this._jukebox.SkipTrack();
         }
 
         private void ProcessChatCommandSyncLibrary(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
@@ -148,10 +107,7 @@ namespace MusicHub.ConsoleApp
                 return;
             }
 
-            var libraryInfo = _libraryRepository.GetLibrary(parameters[0]);
-            var library = CreateLibrary(libraryInfo);
-
-            _spider.QueueLibrary(library);
+            _jukebox.UpdateLibrary(parameters[0]);
 
             client.LocalUser.SendMessage(replyTarget, "Library sync has been queued");
         }
@@ -166,52 +122,26 @@ namespace MusicHub.ConsoleApp
         {
             var replyTarget = GetDefaultReplyTarget(client, source, targets);
 
-            if (_mediaPlayer.Status != MediaPlayerStatus.Playing)
+            var currentSong = _jukebox.CurrentSong;
+
+            if (currentSong == null)
             {
                 client.LocalUser.SendMessage(replyTarget, "There is no song playing; please do not hate indiscriminately");
                 return;
             }
 
-            var currentSong = _mediaPlayer.CurrentSong;
-            if (currentSong == null)
-                throw new ArgumentNullException("currentSong");
-
             SayInChannels(string.Format("{0} hates the current song", source.Name));
 
-            PlayNextSong();
+            var user = this._userRepository.GetByName(source.Name);
+            var song = this._jukebox.CurrentSong;
+
+            var result = _jukebox.Hate(user.Id, song.Id, this.Clients.Sum(c => c.Channels.Sum(ch => ch.Users.Count)));
+
+            if (result.HatersNeeded != 0)
+                SayInChannels(string.Format("{0} more haters needed to skip the track!", result.HatersNeeded));
         }
 
         List<string> _haters = new List<string>();
-        private void PlayNextSong()
-        {
-            // need to stop first, since google music won't give you a 
-            // new song's url while you're playing the old one
-            this._mediaPlayer.Stop();
-
-            var nextSong = _songRepository.GetRandomSong();
-            if (nextSong == null)
-                return;
-
-            var libraryInfo = _libraryRepository.GetLibrary(nextSong.LibraryId);
-            var library = CreateLibrary(libraryInfo);
-            var songUrl = library.GetSongUrl(nextSong.ExternalId);
-            _mediaPlayer.PlaySong(nextSong, songUrl);
-        }
-
-        private IMusicLibrary CreateLibrary(LibraryInfo libraryInfo)
-        {
-            switch (libraryInfo.Type)
-            {
-                case LibraryType.GoogleMusic:
-                    return new GooglePlay.GoogleMusicMusicLibrary(libraryInfo.Id, libraryInfo.Username, libraryInfo.Password);
-
-                case LibraryType.SharedFolder:
-                    return new Implementation.FileSystemMusicLibrary(libraryInfo.Id, libraryInfo.Location, _metadataService);
-
-                default:
-                    throw new ArgumentOutOfRangeException("libraryInfo.Type", libraryInfo.Type, "Unknown type");
-            }
-        }
 
         private void ProcessChatCommandDeleteLibrary(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
         {
@@ -234,7 +164,7 @@ namespace MusicHub.ConsoleApp
             }
 
             var libraryId = parameters[0];
-            this._libraryRepository.Delete(libraryId);
+            this._jukebox.DeleteLibrary(libraryId);
 
             client.LocalUser.SendMessage(replyTarget, "Library has been deleted");
         }
@@ -251,7 +181,7 @@ namespace MusicHub.ConsoleApp
 
             var replyTarget = GetDefaultReplyTarget(client, source, targets);
 
-            var libraries = this._libraryRepository.GetLibrariesForUser(user.Id);
+            var libraries = this._jukebox.GetLibrariesForUser(user.Id);
 
             client.LocalUser.SendMessage(replyTarget, "Your libraries: ");
             foreach (var library in libraries)
@@ -275,7 +205,6 @@ namespace MusicHub.ConsoleApp
             }
 
             var type = parameters[0];
-            LibraryInfo libraryInfo;
             switch ((type ?? string.Empty).ToLower())
             {
                 case "folder":
@@ -286,7 +215,7 @@ namespace MusicHub.ConsoleApp
                     }
 
                     var path = parameters[1];
-                    libraryInfo = _libraryRepository.Create(user.Id, LibraryType.SharedFolder, path, null, null);
+                    _jukebox.CreateLibrary(user.Id, LibraryType.SharedFolder, path, null, null);
 
                     client.LocalUser.SendMessage(replyTarget, string.Format("'{0}' has been added as a library, now syncing ...", path));
                     break;
@@ -301,7 +230,8 @@ namespace MusicHub.ConsoleApp
                     var username = parameters[1];
                     var password = parameters[2];
 
-                    libraryInfo = _libraryRepository.Create(user.Id, LibraryType.GoogleMusic, null, username, password);
+
+                    _jukebox.CreateLibrary(user.Id, LibraryType.GoogleMusic, null, username, password);
                     client.LocalUser.SendMessage(replyTarget, string.Format("{0}'s google music library has been added as a library, now syncing ...", username));
                     break;
 
@@ -309,12 +239,6 @@ namespace MusicHub.ConsoleApp
                     InvalidAddLibraryCommand(client, replyTarget);
                     return;
             }
-
-            var library = CreateLibrary(libraryInfo);
-
-            _spider.QueueLibrary(library);
-
-            SayInChannels(string.Format("{0} has added a {1} library", source.Name, libraryInfo.Type));
         }
 
         const char Delimiter = '"';
@@ -395,7 +319,7 @@ namespace MusicHub.ConsoleApp
 
         protected override void OnLocalUserJoinedChannel(IrcDotNet.IrcLocalUser localUser, IrcDotNet.IrcChannelEventArgs e)
         {
-            this.PlayNextSong();
+            this._jukebox.Play();
         }
 
         protected override void OnLocalUserLeftChannel(IrcDotNet.IrcLocalUser localUser, IrcDotNet.IrcChannelEventArgs e)

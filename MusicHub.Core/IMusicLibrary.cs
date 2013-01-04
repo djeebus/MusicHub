@@ -7,7 +7,6 @@ namespace MusicHub
 {
 	public interface IMusicLibrary
 	{
-        string LibraryId { get; }
 		IEnumerable<Song> GetSongs();
         string GetSongUrl(string externalId);
 	}

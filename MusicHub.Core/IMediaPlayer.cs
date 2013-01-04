@@ -7,14 +7,10 @@ namespace MusicHub
 {
 	public interface IMediaPlayer
 	{
-		Song CurrentSong { get; }
-        MediaPlayerStatus Status { get; }
-
 		void PlaySong(Song song, string mediaUrl);
 		void Stop();
 
-		event EventHandler<SongEventArgs> SongStarted;
-        event EventHandler<StatusEventArgs> StatusChanged;
+        event EventHandler SongFinished;
 	}
 
 	public class SongEventArgs : EventArgs

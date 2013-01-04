@@ -12,12 +12,24 @@ namespace MusicHub.ConsoleApp
     {
         public override void Load()
         {
-            this.Bind<EntityFramework.DbContext>().ToSelf().InThreadScope();
+            // Core
+            this.Bind<IJukebox>().To<MusicHub.Implementation.DefaultJukebox>().InSingletonScope();
+
+            // TagLibSharp
             this.Bind<IMetadataService>().To<TagLibSharp.TagLibSharpMetadataService>().InSingletonScope();
+
+            // EntityFramework
+            this.Bind<EntityFramework.DbContext>().ToSelf().InThreadScope();
+            this.Bind<IAffinityTracker>().To<EntityFramework.AffinityTracker>().InThreadScope();
             this.Bind<IUserRepository>().To<EntityFramework.UserRepository>().InThreadScope();
             this.Bind<ISongRepository>().To<EntityFramework.SongRepository>().InThreadScope();
             this.Bind<ILibraryRepository>().To<EntityFramework.LibraryRepository>().InThreadScope();
+            
+            // BassNet
             this.Bind<IMediaPlayer>().To<BassNet.BassNetMediaPlayer>().InSingletonScope();
+
+            // ConsoleApp
+            this.Bind<IMusicLibraryFactory>().To<MusicLibraryFactory>().InSingletonScope();
         }
     }
 }

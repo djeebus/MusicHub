@@ -10,31 +10,6 @@ namespace MusicHub.BassNet
 {
     public class BassNetMediaPlayer : IMediaPlayer, IDisposable
     {
-        public Song CurrentSong
-        {
-            get;
-            private set;
-        }
-
-        public MediaPlayerStatus Status
-        {
-            get 
-            { 
-                if (!_currentSongStreamId.HasValue)
-                    return MediaPlayerStatus.Stopped;
-
-                var state = Bass.BASS_ChannelIsActive(_currentSongStreamId.Value);
-                switch (state)
-                {
-                    case BASSActive.BASS_ACTIVE_PLAYING:
-                        return MediaPlayerStatus.Playing;
-
-                    default:
-                        return MediaPlayerStatus.Stopped;
-                }
-            }
-        }
-
         public BassNetMediaPlayer()
         {
             if (!Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero))
@@ -48,9 +23,7 @@ namespace MusicHub.BassNet
 
         public void PlaySong(Song song, string mediaUrl)
         {
-            var result = this.StopInternal();
-
-            this.CurrentSong = song;
+            this.Stop();
 
             int streamId;
             if (mediaUrl.StartsWith("http"))
@@ -58,36 +31,26 @@ namespace MusicHub.BassNet
             else
                 streamId = Bass.BASS_StreamCreateFile(mediaUrl, 0, 0, BASSFlag.BASS_DEFAULT);
 
+            if (streamId == 0)
+                throw new BassException();
+
             if (!Bass.BASS_ChannelPlay(streamId, true))
                 throw new BassException();
 
             _currentSongStreamId = streamId;
 
             var syncId = Bass.BASS_ChannelSetSync(streamId, BASSSync.BASS_SYNC_END, 0, _syncCallback, IntPtr.Zero);
-
-            this.OnSongStarted(song);
-
-            if (!result)
-                this.OnStatusChanged(MediaPlayerStatus.Playing);
         }
 
         private void SyncCallback(int handle, int channel, int data, IntPtr user)
         {
-            this.OnStatusChanged(MediaPlayerStatus.SongFinished);
+            this.OnSongFinished();
         }
 
         public void Stop()
         {
-            var result = StopInternal();
-
-            if (result)
-                this.OnStatusChanged(MediaPlayerStatus.Stopped);
-        }
-
-        private bool StopInternal()
-        {
             if (!_currentSongStreamId.HasValue)
-                return false;
+                return;
 
             var active = Bass.BASS_ChannelIsActive(_currentSongStreamId.Value);
 
@@ -106,31 +69,20 @@ namespace MusicHub.BassNet
             }
 
             _currentSongStreamId = null;
-
-            return true;
         }
 
-        public event EventHandler<SongEventArgs> SongStarted;
+        public event EventHandler SongFinished;
 
-        private void OnSongStarted(Song song)
+        private void OnSongFinished()
         {
-            var handler = this.SongStarted;
+            var handler = this.SongFinished;
             if (handler != null)
-                handler(this, new SongEventArgs(song));
-        }
-
-        public event EventHandler<StatusEventArgs> StatusChanged;
-
-        private void OnStatusChanged(MediaPlayerStatus status)
-        {
-            var handler = this.StatusChanged;
-            if (handler != null)
-                handler(this, new StatusEventArgs(status));
+                handler(this, EventArgs.Empty);
         }
 
         public void Dispose()
         {
-            this.StopInternal();
+            this.Stop();
 
             Bass.BASS_Free();
         }

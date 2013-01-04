@@ -40,20 +40,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HateResult.cs" />
     <Compile Include="IAffinityTracker.cs" />
     <Compile Include="IAuthenticationService.cs" />
     <Compile Include="IConnectionRepository.cs" />
+    <Compile Include="IJukebox.cs" />
     <Compile Include="ILibraryRepository.cs" />
     <Compile Include="IMediaPlayer.cs" />
     <Compile Include="IMetadataService.cs" />
+    <Compile Include="Implementation\DefaultJukebox.cs" />
     <Compile Include="Implementation\FileSystemMusicLibrary.cs" />
     <Compile Include="IMusicLibrary.cs" />
+    <Compile Include="IMusicLibraryFactory.cs" />
     <Compile Include="ISongRepository.cs" />
     <Compile Include="IUserRepository.cs" />
     <Compile Include="LibraryInfo.cs" />
     <Compile Include="LibraryType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Song.cs" />
+    <Compile Include="SongSpider.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

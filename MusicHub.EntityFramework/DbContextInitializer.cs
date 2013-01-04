@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MusicHub.EntityFramework
 {
-    public class DbContextInitializer : System.Data.Entity.DropCreateDatabaseIfModelChanges<DbContext>
+    public class DbContextInitializer : System.Data.Entity.CreateDatabaseIfNotExists<DbContext>
     {
         static string[] _indexes = new[] {
             "CREATE UNIQUE INDEX IDX_Users_Username ON Users (Username)",

@@ -9,19 +9,12 @@ namespace MusicHub.GooglePlay
 {
     public class GoogleMusicMusicLibrary : IMusicLibrary
     {
-        public string LibraryId
-        {
-            get;
-            private set;
-        }
-
         private readonly string _username, _password;
 
         private readonly GoogleMusicClient _client;
 
-        public GoogleMusicMusicLibrary(string libraryId, string username, string password)
+        public GoogleMusicMusicLibrary(string username, string password)
         {
-            this.LibraryId = libraryId;
             this._username = username;
             this._password = password;
 
@@ -61,7 +54,6 @@ namespace MusicHub.GooglePlay
                         Album = song.Album,
                         Artist = song.Artist,
                         ExternalId = song.Id,
-                        LibraryId = this.LibraryId,
                         Title = song.Title,
                         Track = song.Track,
                         Year = song.Year,

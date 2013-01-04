@@ -222,6 +222,10 @@
       <Project>{455878F0-294B-476A-A400-F842657395A6}</Project>
       <Name>MusicHub.ActiveDirectory</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MusicHub.BassNet\MusicHub.BassNet.csproj">
+      <Project>{c07ed5ac-5953-4333-802e-d2640bde701d}</Project>
+      <Name>MusicHub.BassNet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MusicHub.Core\MusicHub.Core.csproj">
       <Project>{041A5FE8-9561-4929-951C-0A861733EA68}</Project>
       <Name>MusicHub.Core</Name>
@@ -229,10 +233,6 @@
     <ProjectReference Include="..\MusicHub.EntityFramework\MusicHub.EntityFramework.csproj">
       <Project>{23b7ab97-db47-4c45-b2d8-e3d2cda42ead}</Project>
       <Name>MusicHub.EntityFramework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MusicHub.FMod\MusicHub.FMod.csproj">
-      <Project>{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}</Project>
-      <Name>MusicHub.FMod</Name>
     </ProjectReference>
     <ProjectReference Include="..\MusicHub.TagLibSharp\MusicHub.TagLibSharp.csproj">
       <Project>{7536DF7C-6BAA-4BFC-9A8A-F1618E78A0CF}</Project>

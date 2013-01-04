@@ -9,13 +9,10 @@ namespace MusicHub.Implementation
 	{
 		private readonly MusicHub.IMetadataService _metadataService;
 
-        public string LibraryId { get; private set; }
-
         private readonly string _rootFolder;
 
-		public FileSystemMusicLibrary(string libraryId, string rootFolder, MusicHub.IMetadataService metadataService)
+		public FileSystemMusicLibrary(string rootFolder, MusicHub.IMetadataService metadataService)
 		{
-            this.LibraryId = libraryId;
 			this._metadataService = metadataService;
             this._rootFolder = rootFolder;
 		}
