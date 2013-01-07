@@ -80,7 +80,9 @@ namespace MusicHub.Implementation
 
         public void SkipTrack()
         {
-            var nextSong = _songRepository.GetRandomSong();
+            var currentSong = this.CurrentSong;
+
+            var nextSong = _songRepository.GetRandomSong(currentSong);
             if (nextSong == null)
                 return;
 
@@ -108,19 +110,28 @@ namespace MusicHub.Implementation
             _mediaPlayer.Stop();
         }
 
+        protected int GetHatersNeededToSkip(int currentListeners)
+        {
+            var percentageOfListenersHating = _haters / (decimal)currentListeners;
+
+            return (int)Math.Floor(percentageOfListenersHating * .5m);
+        }
+
         public HateResult Hate(string userId, string songId, int currentListeners)
         {
             _affinityTracker.Record(userId, songId, Affinity.Hate);
 
-            Interlocked.Increment(ref _haters);
+            var currentHaters = Interlocked.Increment(ref _haters);
 
-            var percentageOfListenersHating = _haters / (decimal)currentListeners;
+            var hatersNeeded = GetHatersNeededToSkip(currentListeners);
 
-            if (percentageOfListenersHating < .5m)
+            var hatersLeft = hatersNeeded - currentHaters;
+
+            if (hatersLeft > 0)
             {
                 return new HateResult
                 {
-                    HatersNeeded = (uint)Math.Ceiling(currentListeners * .5)
+                    HatersNeeded = (uint)hatersLeft,
                 };
             }
 

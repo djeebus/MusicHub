@@ -59,7 +59,7 @@ namespace MusicHub.ConsoleApp
             this.ChatCommandProcessors.Add("delete-library", ProcessChatCommandDeleteLibrary);
             this.ChatCommandProcessors.Add("sync-library", ProcessChatCommandSyncLibrary);
 
-            //this.ChatCommandProcessors.Add("next", ProcessChatCommandNextSong);
+            this.ChatCommandProcessors.Add("next", ProcessChatCommandNextSong);
             this.ChatCommandProcessors.Add("hate", ProcessChatCommandHateSong);
             this.ChatCommandProcessors.Add("stop", ProcessChatCommandStop);
             this.ChatCommandProcessors.Add("play", ProcessChatCommandPlay);

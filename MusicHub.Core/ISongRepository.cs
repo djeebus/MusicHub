@@ -9,7 +9,7 @@ namespace MusicHub
     {
         Song UpsertSong(string libraryId, string externalId, string artist, string title, string album, uint? track, uint? year);
 
-        Song GetRandomSong();
+        Song GetRandomSong(Song previousSong);
 
         void PruneSongs(string libraryId);
     }
