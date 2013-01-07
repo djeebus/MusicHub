@@ -57,7 +57,7 @@ namespace MusicHub.EntityFramework
                 Password = this.Password,
                 Location = this.Path,
                 Type = this.Type,
-                TotalSongs = this.Songs.Count(),
+                TotalSongs = this.Songs == null ? 0 : this.Songs.Count(),
             };
         }
     }

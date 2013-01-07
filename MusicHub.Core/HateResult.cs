@@ -7,6 +7,6 @@ namespace MusicHub
 {
     public class HateResult
     {
-        public uint HatersNeeded { get; set; }
+        public int HatersNeeded { get; set; }
     }
 }

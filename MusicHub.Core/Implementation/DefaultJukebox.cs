@@ -15,7 +15,7 @@ namespace MusicHub.Implementation
         private readonly IAffinityTracker _affinityTracker;
         private readonly SongSpider _spider;
 
-        private int _haters = 0;
+        private List<string> _haters = new List<string>();
 
         public event EventHandler<SongEventArgs> SongStarted;
 
@@ -62,7 +62,7 @@ namespace MusicHub.Implementation
                 handler(this, new SongEventArgs(song));
 
             this.CurrentSong = song;
-            this._haters = 0;
+            this._haters.Clear();
         }
 
         private void _mediaPlayer_SongFinished(object sender, EventArgs e)
@@ -112,18 +112,25 @@ namespace MusicHub.Implementation
 
         protected int GetHatersNeededToSkip(int currentListeners)
         {
-            var percentageOfListenersHating = _haters / (decimal)currentListeners;
-
-            return (int)Math.Floor(percentageOfListenersHating * .5m);
+            return (int)Math.Ceiling(currentListeners * .5m);
         }
 
         public HateResult Hate(string userId, string songId, int currentListeners)
         {
+            var hatersNeeded = GetHatersNeededToSkip(currentListeners);
+
+            if (_haters.Contains(userId))
+            {
+                return new HateResult
+                {
+                    HatersNeeded = hatersNeeded - _haters.Count,
+                };
+            }
+
             _affinityTracker.Record(userId, songId, Affinity.Hate);
 
-            var currentHaters = Interlocked.Increment(ref _haters);
-
-            var hatersNeeded = GetHatersNeededToSkip(currentListeners);
+            _haters.Add(userId);
+            var currentHaters = _haters.Count;
 
             var hatersLeft = hatersNeeded - currentHaters;
 
@@ -131,16 +138,13 @@ namespace MusicHub.Implementation
             {
                 return new HateResult
                 {
-                    HatersNeeded = (uint)hatersLeft,
+                    HatersNeeded = hatersLeft,
                 };
             }
 
             this.SkipTrack();
 
-            return new HateResult
-            {
-                HatersNeeded = 0,
-            };
+            return new HateResult();
         }
 
         public void UpdateLibrary(string libraryId)

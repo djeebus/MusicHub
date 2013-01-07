@@ -21,24 +21,14 @@ namespace Website.Hubs
     public class ClientProxy : IClientProxy
     {
         dynamic _clients;
-        IMediaPlayer _mediaServer;
+        IJukebox _jukebox;
 
-        public ClientProxy(dynamic clients, IMediaPlayer mediaServer)
+        public ClientProxy(dynamic clients, IJukebox jukebox)
         {
             this._clients = clients;
-            this._mediaServer = mediaServer;
+            this._jukebox = jukebox;
 
-            this._mediaServer.SongStarted += _mediaServer_SongStarted;
-        }
-
-        void _musicRepository_SongAdded(object sender, SongEventArgs e)
-        {
-            this.reportAddedSong(e.Song);
-        }
-
-        public void reportAddedSong(Song song)
-        {
-            this.log(string.Format("{0} by {1} has been added", song.Title, song.Artist));
+            this._jukebox.SongStarted += _mediaServer_SongStarted;
         }
 
         protected void _mediaServer_SongStarted(object sender, SongEventArgs e)

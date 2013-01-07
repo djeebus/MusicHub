@@ -29,9 +29,13 @@ namespace Website.Models
             {
                 case LibraryType.SharedFolder:
                     return new MusicHub.Implementation.FileSystemMusicLibrary(
-                        library.Id,
                         library.Location, 
                         _metadataService);
+
+                case LibraryType.GoogleMusic:
+                    return new MusicHub.GooglePlay.GoogleMusicMusicLibrary(
+                        library.Username,
+                        library.Password);
 
                 default:
                     throw new NotImplementedException();

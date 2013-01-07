@@ -1,6 +1,6 @@
 *.suo
 *.user
-*.ncrunch*
+*ncrunch*
 /*/bin
 /*/obj
 packages/*/*

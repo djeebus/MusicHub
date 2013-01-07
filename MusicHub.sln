@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.TagLibSharp", "Mus
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.ActiveDirectory", "MusicHub.ActiveDirectory\MusicHub.ActiveDirectory.csproj", "{455878F0-294B-476A-A400-F842657395A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.FMod", "MusicHub.FMod\MusicHub.FMod.csproj", "{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{F4A77B2C-F2CB-4B8B-85B5-EB846AFA8C12}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
@@ -25,6 +23,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.GooglePlay", "MusicHub.GooglePlay\MusicHub.GooglePlay.csproj", "{A373CB67-DF1B-443F-BC41-C58FF0652BD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.BassNet", "MusicHub.BassNet\MusicHub.BassNet.csproj", "{C07ED5AC-5953-4333-802E-D2640BDE701D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.Core.Tests", "MusicHub.Core.Tests\MusicHub.Core.Tests.csproj", "{DA0774F2-8BE7-4E6E-859D-0333A6CED18F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,6 @@ Global
 		{455878F0-294B-476A-A400-F842657395A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{455878F0-294B-476A-A400-F842657395A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{455878F0-294B-476A-A400-F842657395A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{04E4CC43-3EA9-4905-B8CD-87D22025CCE9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{23B7AB97-DB47-4C45-B2D8-E3D2CDA42EAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{23B7AB97-DB47-4C45-B2D8-E3D2CDA42EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23B7AB97-DB47-4C45-B2D8-E3D2CDA42EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -67,6 +63,10 @@ Global
 		{C07ED5AC-5953-4333-802E-D2640BDE701D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C07ED5AC-5953-4333-802E-D2640BDE701D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C07ED5AC-5953-4333-802E-D2640BDE701D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA0774F2-8BE7-4E6E-859D-0333A6CED18F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA0774F2-8BE7-4E6E-859D-0333A6CED18F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA0774F2-8BE7-4E6E-859D-0333A6CED18F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA0774F2-8BE7-4E6E-859D-0333A6CED18F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

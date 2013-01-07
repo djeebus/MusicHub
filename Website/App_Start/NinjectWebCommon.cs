@@ -55,18 +55,27 @@ namespace Website.App_Start
         {
             kernel.Settings.AllowNullInjection = true;
 
+            // MusicHub.Core
+            kernel.Bind<MusicHub.IJukebox>().To<MusicHub.Implementation.DefaultJukebox>().InSingletonScope();
+            kernel.Bind<MusicHub.SongSpider>().ToSelf().InSingletonScope();
+
+            // TagLibSharp
             kernel.Bind<MusicHub.IMetadataService>().To<MusicHub.TagLibSharp.TagLibSharpMetadataService>().InSingletonScope();
+
+            // ActiveDirectory authentication
             kernel.Bind<MusicHub.IAuthenticationService>().To<MusicHub.ActiveDirectory.ActiveDirectoryAuthenticationService>().InSingletonScope();
-            kernel.Bind<MusicHub.IMediaPlayer>().To<MusicHub.FMod.FModMediaServer>().InSingletonScope()
+
+            // BassNet
+            kernel.Bind<MusicHub.IMediaPlayer>().To<MusicHub.BassNet.BassNetMediaPlayer>().InSingletonScope()
                 .OnActivation(SubscribeToStatusChanges);
 
+            // EntityFramework
             kernel.Bind<MusicHub.IConnectionRepository>().To<MusicHub.EntityFramework.ConnectionRepository>().InRequestScope();
             kernel.Bind<MusicHub.ILibraryRepository>().To<MusicHub.EntityFramework.LibraryRepository>().InRequestScope();
             kernel.Bind<MusicHub.EntityFramework.DbContext>().ToSelf().InRequestScope();
             kernel.Bind<MusicHub.ISongRepository>().To<MusicHub.EntityFramework.SongRepository>().InRequestScope();
             kernel.Bind<MusicHub.IUserRepository>().To<MusicHub.EntityFramework.UserRepository>().InRequestScope();
-            kernel.Bind<MusicHub.SongSpider>().ToSelf().InSingletonScope();
-            kernel.Bind<Models.MediaLibraryFactory>().ToSelf().InRequestScope();
+            kernel.Bind<MusicHub.IMusicLibraryFactory>().To<Models.MediaLibraryFactory>().InRequestScope();
 
             // for HubDispatcher.ProcessRequestAsync()
             kernel.Bind<SignalR.Hubs.IJavaScriptProxyGenerator>().ToNull().InSingletonScope();
@@ -87,7 +96,7 @@ namespace Website.App_Start
             kernel.Bind<SignalR.Infrastructure.IServerIdManager>().ToNull().InSingletonScope();
         }
 
-        private static void SubscribeToStatusChanges(Ninject.Activation.IContext arg1, MusicHub.FMod.FModMediaServer mediaServer)
+        private static void SubscribeToStatusChanges(Ninject.Activation.IContext arg1, MusicHub.BassNet.BassNetMediaPlayer mediaServer)
         {
             mediaServer.StatusChanged += (s,e) => {
                 var hub = SignalR.GlobalHost.ConnectionManager.GetHubContext<Website.Hubs.MusicControl>();

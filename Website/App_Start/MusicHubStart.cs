@@ -23,39 +23,24 @@ namespace Website.App_Start
         {
             var resolver = DependencyResolver.Current;
 
-            var spider = resolver.GetService<MusicHub.SongSpider>();
+            var jukebox = resolver.GetService<MusicHub.IJukebox>();
 
-            var libraryRepository = resolver.GetService<MusicHub.ILibraryRepository>();
-            var libraries = libraryRepository.GetLibraries();
+            //var factory = resolver.GetService<Models.MediaLibraryFactory>();
 
-            var factory = resolver.GetService<Models.MediaLibraryFactory>();
+            //foreach (var libraryInfo in libraries)
+            //{
+            //    var library = factory.GetLibrary(libraryInfo.Id);
 
-            foreach (var libraryInfo in libraries)
-            {
-                var library = factory.GetLibrary(libraryInfo.Id);
-
-                spider.QueueLibrary(library);
-            }
+            //    spider.QueueLibrary(library);
+            //}
         }
 
         private static void PlayRandomSong()
         {
             var resolver = DependencyResolver.Current;
 
-            var songSelector = resolver.GetService<MusicHub.ISongRepository>();
-            var randomSong = songSelector.GetRandomSong();
-            if (randomSong == null)
-                return;
-
-            var factory = resolver.GetService<MediaLibraryFactory>();
-
-            var library = factory.GetLibrary(randomSong.LibraryId);
-
-            var player = DependencyResolver.Current.GetService<MusicHub.IMediaPlayer>();
-
-            var songUrl = library.GetSongUrl(randomSong.ExternalId);
-
-            player.PlaySong(randomSong, songUrl);
+            var jukebox = resolver.GetService<MusicHub.IJukebox>();
+            jukebox.Play();
         }
     }
 }
