@@ -57,6 +57,7 @@
     <Compile Include="LibraryInfo.cs" />
     <Compile Include="LibraryType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchType.cs" />
     <Compile Include="Song.cs" />
     <Compile Include="SongSpider.cs" />
     <Compile Include="User.cs" />

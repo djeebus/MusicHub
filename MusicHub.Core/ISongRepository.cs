@@ -12,5 +12,7 @@ namespace MusicHub
         Song GetRandomSong(Song previousSong);
 
         void PruneSongs(string libraryId);
+
+        void MarkAsPlayed(string songId);
     }
 }

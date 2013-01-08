@@ -67,6 +67,11 @@ namespace MusicHub.Implementation
 
         private void _mediaPlayer_SongFinished(object sender, EventArgs e)
         {
+            var currentSong = this.CurrentSong;
+
+            this._songRepository.MarkAsPlayed(currentSong.Id);
+            this._libraryRepository.MarkAsPlayed(currentSong.LibraryId);
+
             this.SkipTrack();
         }
 
@@ -169,6 +174,11 @@ namespace MusicHub.Implementation
         public LibraryInfo[] GetLibrariesForUser(string userId)
         {
             return _libraryRepository.GetLibrariesForUser(userId);
+        }
+
+        public Song[] FindSongs(SearchType type, string term)
+        {
+            throw new NotImplementedException();
         }
     }
 }

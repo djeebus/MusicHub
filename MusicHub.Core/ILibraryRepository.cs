@@ -13,5 +13,6 @@ namespace MusicHub
         LibraryInfo Create(string userId, LibraryType type, string path, string username, string password);
         void Delete(string libraryId);
         void UpdateLastSyncDate(string libraryId);
+        void MarkAsPlayed(string libraryId);
     }
 }

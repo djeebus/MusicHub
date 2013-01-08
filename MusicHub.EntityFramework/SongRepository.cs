@@ -76,34 +76,51 @@ WHERE s.Id = @previousSongId
 
 SET @previousUserId = ISNULL(@previousUserId, NEWID())
 
-SELECT TOP 1 *
+SELECT TOP 1 Id
 FROM Songs s
     JOIN Libraries l ON s.LibraryId = l.LibraryId
 WHERE l.UserId != @previousUserId
 ORDER BY NEWID() DESC";
 
+        internal class SongStub
+        {
+            public Guid Id { get; set; }
+        }
+
         public Song GetRandomSong(Song previousSong)
         {
             var result = GetNextSongModel(previousSong);
 
-            if (result != null)
-                return result.ToModel();
+            if (result == null)
+                result = GetNextSongModel(null);
 
-            result = GetNextSongModel(null);
-            if (result != null)
-                return result.ToModel();
+            var song = this._db.Songs.First(s => s.Id == result.Id);
 
-            return null;
+            return song.ToModel();
         }
 
-        private DbSong GetNextSongModel(Song previousSong)
+        private SongStub GetNextSongModel(Song previousSong)
         {
             var param = new SqlParameter("@previousSongId", previousSong == null ? Guid.Empty.ToString() : previousSong.Id);
 
             var result = this._db.Database
-                .SqlQuery<DbSong>(RandomSongQuery, param)
+                .SqlQuery<SongStub>(RandomSongQuery, param)
                 .FirstOrDefault();
             return result;
+        }
+
+        public void MarkAsPlayed(string songId)
+        {
+            var guid = Guid.Parse(songId);
+
+            var song = this._db.Songs.FirstOrDefault(s => s.Id == guid);
+            if (song == null)
+                throw new ArgumentOutOfRangeException("songId", songId, "Unknown song id");
+
+            song.LastPlayed = DateTime.Now;
+            song.PlayCount++;
+
+            this._db.SaveChanges();
         }
     }
 }

@@ -26,5 +26,7 @@ namespace MusicHub
         LibraryInfo[] GetLibrariesForUser(string userId);
 
         void Stop();
+
+        Song[] FindSongs(SearchType type, string term);
     }
 }

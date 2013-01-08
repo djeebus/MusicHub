@@ -64,6 +64,10 @@
     <Compile Include="Migrations\201301041604527_AddAffinityTracking.Designer.cs">
       <DependentUpon>201301041604527_AddAffinityTracking.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201301081739445_AddSongPlayCounts.cs" />
+    <Compile Include="Migrations\201301081739445_AddSongPlayCounts.Designer.cs">
+      <DependentUpon>201301081739445_AddSongPlayCounts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="SongRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,6 +89,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201301041604527_AddAffinityTracking.resx">
       <DependentUpon>201301041604527_AddAffinityTracking.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201301081739445_AddSongPlayCounts.resx">
+      <DependentUpon>201301081739445_AddSongPlayCounts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

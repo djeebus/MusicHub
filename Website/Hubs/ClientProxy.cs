@@ -9,7 +9,6 @@ namespace Website.Hubs
 {
     public interface IClientProxy
     {
-        void reportAddedSong(MusicHub.Song song);
         void log(string text);
 
         void updateCurrentSong(MusicHub.Song song);

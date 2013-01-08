@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 namespace MusicHub.EntityFramework
 {
     [Table("Songs")]
-    public class DbSong
+    public class DbSong    
     {
+        [Key]
         public Guid Id { get; set; }
         [Required, StringLength(1024)]
         public string ExternalId { get; set; }
@@ -27,6 +28,9 @@ namespace MusicHub.EntityFramework
 
         public DateTime LastSeen { get; set; }
 
+        public DateTime? LastPlayed { get; set; }
+        public long PlayCount { get; set; }
+
         internal Song ToModel()
         {
             return new Song
@@ -39,6 +43,7 @@ namespace MusicHub.EntityFramework
                 Title = this.Title,
                 Track = this.Track,
                 Year = this.Year,
+                Username = this.Library == null || this.Library.User == null ? null : this.Library.User.Username,
             };
         }
     }

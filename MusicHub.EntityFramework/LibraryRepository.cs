@@ -91,5 +91,18 @@ namespace MusicHub.EntityFramework
 
             return dbLibrary.ToModel();
         }
+
+        public void MarkAsPlayed(string libraryId)
+        {
+            var guid = Guid.Parse(libraryId);
+
+            var library = _db.Libraries.FirstOrDefault(l => l.Id == guid);
+            if (libraryId == null)
+                throw new ArgumentOutOfRangeException("libraryId", libraryId, "Unknown library id");
+
+            library.LastPlayed = DateTime.Now;
+            library.PlayCount++;
+            this._db.SaveChanges();
+        }
     }
 }

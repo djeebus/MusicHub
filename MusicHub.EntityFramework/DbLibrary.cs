@@ -12,6 +12,7 @@ namespace MusicHub.EntityFramework
     public class DbLibrary
     {
         [Column("LibraryId")]
+        [Key]
         public Guid Id { get; set; }
 
         public Guid UserId { get; set; }
@@ -26,6 +27,9 @@ namespace MusicHub.EntityFramework
         public string Username { get; set; }
         [StringLength(1024)]
         public string Password { get; set; }
+
+        public DateTime? LastPlayed { get; set; }
+        public long PlayCount { get; set; }
 
         public virtual ICollection<DbSong> Songs { get; set; }
 
