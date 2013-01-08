@@ -31,9 +31,7 @@ namespace MusicHub.ConsoleApp
 
         void _jukebox_SongStarted(object sender, SongEventArgs e)
         {
-            var msg = string.Format("Now playing: {0} by {1}", e.Song.Title, e.Song.Artist);
-
-            SayInChannels(msg);
+            SayInChannels(e.Song.ToString());
         }
 
         private void SayInChannels(string msg)
@@ -313,7 +311,12 @@ namespace MusicHub.ConsoleApp
 
         protected override void OnClientDisconnect(IrcDotNet.IrcClient client)
         {
+            var handler = this.ClientDisconnect;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
         }
+
+        public event EventHandler ClientDisconnect;
 
         protected override void OnClientRegistered(IrcDotNet.IrcClient client)
         {
