@@ -119,7 +119,7 @@ namespace MusicHub.ConsoleApp
         private void ProcessChatCommandHateSong(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
         {
             var replyTarget = GetDefaultReplyTarget(client, source, targets);
-
+            
             var currentSong = _jukebox.CurrentSong;
 
             if (currentSong == null)
@@ -131,12 +131,11 @@ namespace MusicHub.ConsoleApp
             SayInChannels(string.Format("{0} hates the current song", source.Name));
 
             var user = this._userRepository.EnsureUser(source.Name, source.Name);
-            var song = this._jukebox.CurrentSong;
 
             // subtract one for the bot
             var currentListeners = this.Clients.Sum(c => c.Channels.Sum(ch => ch.Users.Count)) - 1;
 
-            var result = _jukebox.Hate(user.Id, song.Id, currentListeners);
+            var result = _jukebox.Hate(user.Id, currentListeners);
 
             if (result.HatersNeeded != 0)
                 SayInChannels(string.Format("{0} more haters needed to skip the track!", result.HatersNeeded));

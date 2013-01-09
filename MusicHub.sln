@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.BassNet", "MusicHu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.Core.Tests", "MusicHub.Core.Tests\MusicHub.Core.Tests.csproj", "{DA0774F2-8BE7-4E6E-859D-0333A6CED18F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicHub.MicrosoftTextToSpeech", "MusicHub.MicrosoftTextToSpeech\MusicHub.MicrosoftTextToSpeech\MusicHub.MicrosoftTextToSpeech.csproj", "{C1AB0EFD-A6DF-44C0-ABA1-F5F08EC838F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{DA0774F2-8BE7-4E6E-859D-0333A6CED18F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA0774F2-8BE7-4E6E-859D-0333A6CED18F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA0774F2-8BE7-4E6E-859D-0333A6CED18F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1AB0EFD-A6DF-44C0-ABA1-F5F08EC838F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1AB0EFD-A6DF-44C0-ABA1-F5F08EC838F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1AB0EFD-A6DF-44C0-ABA1-F5F08EC838F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1AB0EFD-A6DF-44C0-ABA1-F5F08EC838F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

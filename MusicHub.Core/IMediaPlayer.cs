@@ -12,31 +12,4 @@ namespace MusicHub
 
         event EventHandler SongFinished;
 	}
-
-	public class SongEventArgs : EventArgs
-	{
-		public Song Song { get; private set; }
-
-		public SongEventArgs(Song song)
-		{
-			this.Song = song;
-		}
-	}
-
-    public class StatusEventArgs : EventArgs
-    {
-        public MediaPlayerStatus Status { get; private set; }
-
-        public StatusEventArgs(MediaPlayerStatus status)
-        {
-            this.Status = status;
-        }
-    }
-
-    public enum MediaPlayerStatus
-    {
-        Playing,
-        SongFinished,
-        Stopped,
-    }
 }

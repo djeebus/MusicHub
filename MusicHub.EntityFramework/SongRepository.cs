@@ -67,19 +67,16 @@ namespace MusicHub.EntityFramework
         }
 
         const string RandomSongQuery = @"
-DECLARE @previousUserId UNIQUEIDENTIFIER
+DECLARE @oldestLibraryId UNIQUEIDENTIFIER
 
-SELECT @previousUserId = l.UserId
-FROM Songs s
-    JOIN Libraries l on s.LibraryId = l.LibraryId
-WHERE s.Id = @previousSongId
+SELECT TOP 1 @oldestLibraryId = l.LibraryId
+FROM Libraries l
+ORDER BY l.LastPlayed asc
 
-SET @previousUserId = ISNULL(@previousUserId, NEWID())
-
-SELECT TOP 1 Id
+SELECT TOP 1 Id, l.LibraryId
 FROM Songs s
     JOIN Libraries l ON s.LibraryId = l.LibraryId
-WHERE l.UserId != @previousUserId
+WHERE l.LibraryId = @oldestLibraryId
 ORDER BY NEWID() DESC";
 
         internal class SongStub
@@ -89,22 +86,20 @@ ORDER BY NEWID() DESC";
 
         public Song GetRandomSong(Song previousSong)
         {
-            var result = GetNextSongModel(previousSong);
+            var result = GetNextSongModel();
 
             if (result == null)
-                result = GetNextSongModel(null);
+                return null;
 
             var song = this._db.Songs.First(s => s.Id == result.Id);
 
             return song.ToModel();
         }
 
-        private SongStub GetNextSongModel(Song previousSong)
+        private SongStub GetNextSongModel()
         {
-            var param = new SqlParameter("@previousSongId", previousSong == null ? Guid.Empty.ToString() : previousSong.Id);
-
             var result = this._db.Database
-                .SqlQuery<SongStub>(RandomSongQuery, param)
+                .SqlQuery<SongStub>(RandomSongQuery)
                 .FirstOrDefault();
             return result;
         }

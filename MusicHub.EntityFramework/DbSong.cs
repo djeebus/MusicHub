@@ -44,6 +44,7 @@ namespace MusicHub.EntityFramework
                 Track = this.Track,
                 Year = this.Year,
                 Username = this.Library == null || this.Library.User == null ? null : this.Library.User.Username,
+                UserId = this.Library == null ? null : this.Library.UserId.ToString(),
             };
         }
     }

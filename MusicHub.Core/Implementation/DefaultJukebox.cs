@@ -18,6 +18,7 @@ namespace MusicHub.Implementation
         private List<string> _haters = new List<string>();
 
         public event EventHandler<SongEventArgs> SongStarted;
+        public event EventHandler<SongEventArgs> SongFinished;
 
         public Song CurrentSong
         {
@@ -42,7 +43,7 @@ namespace MusicHub.Implementation
 
             _mediaPlayer.SongFinished += _mediaPlayer_SongFinished;
 
-            UpdateAllLibraries();
+            //UpdateAllLibraries();
         }
 
         private void UpdateAllLibraries()
@@ -63,6 +64,13 @@ namespace MusicHub.Implementation
 
             this.CurrentSong = song;
             this._haters.Clear();
+        }
+
+        private void OnSongFinished(Song song)
+        {
+            var handler = this.SongFinished;
+            if (handler != null)
+                handler(this, new SongEventArgs(song));
         }
 
         private void _mediaPlayer_SongFinished(object sender, EventArgs e)
@@ -120,8 +128,15 @@ namespace MusicHub.Implementation
             return (int)Math.Ceiling(currentListeners * .5m);
         }
 
-        public HateResult Hate(string userId, string songId, int currentListeners)
+        public HateResult Hate(string userId, int currentListeners)
         {
+            var currentSong = this.CurrentSong;
+            if (currentSong.UserId == userId)
+            {
+                this.SkipTrack();
+                return new HateResult();
+            }
+
             var hatersNeeded = GetHatersNeededToSkip(currentListeners);
 
             if (_haters.Contains(userId))
@@ -132,7 +147,7 @@ namespace MusicHub.Implementation
                 };
             }
 
-            _affinityTracker.Record(userId, songId, Affinity.Hate);
+            _affinityTracker.Record(userId, currentSong.Id, Affinity.Hate);
 
             _haters.Add(userId);
             var currentHaters = _haters.Count;
@@ -179,6 +194,6 @@ namespace MusicHub.Implementation
         public Song[] FindSongs(SearchType type, string term)
         {
             throw new NotImplementedException();
-        }
+        }        
     }
 }

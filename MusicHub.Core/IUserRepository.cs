@@ -7,7 +7,6 @@ namespace MusicHub
 {
 	public interface IUserRepository
 	{
-		//User GetByName(string username);
         User GetById(string userId);
         User[] GetOnlineUsers();
 

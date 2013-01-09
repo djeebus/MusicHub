@@ -1,15 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{041A5FE8-9561-4929-951C-0A861733EA68}</ProjectGuid>
+    <ProjectGuid>{C1AB0EFD-A6DF-44C0-ABA1-F5F08EC838F1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MusicHub</RootNamespace>
-    <AssemblyName>MusicHub.Core</AssemblyName>
+    <RootNamespace>MusicHub.MicrosoftTextToSpeech</RootNamespace>
+    <AssemblyName>MusicHub.MicrosoftTextToSpeech</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,28 +39,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HateResult.cs" />
-    <Compile Include="IAffinityTracker.cs" />
-    <Compile Include="IAuthenticationService.cs" />
-    <Compile Include="IConnectionRepository.cs" />
-    <Compile Include="IJukebox.cs" />
-    <Compile Include="ILibraryRepository.cs" />
-    <Compile Include="IMediaPlayer.cs" />
-    <Compile Include="IMetadataService.cs" />
-    <Compile Include="Implementation\DefaultJukebox.cs" />
-    <Compile Include="Implementation\FileSystemMusicLibrary.cs" />
-    <Compile Include="IMusicLibrary.cs" />
-    <Compile Include="IMusicLibraryFactory.cs" />
-    <Compile Include="ISongRepository.cs" />
-    <Compile Include="IUserRepository.cs" />
-    <Compile Include="LibraryInfo.cs" />
-    <Compile Include="LibraryType.cs" />
+    <Compile Include="Class1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SearchType.cs" />
-    <Compile Include="Song.cs" />
-    <Compile Include="SongEventArgs.cs" />
-    <Compile Include="SongSpider.cs" />
-    <Compile Include="User.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MusicHub.Core\MusicHub.Core.csproj">
+      <Project>{041a5fe8-9561-4929-951c-0a861733ea68}</Project>
+      <Name>MusicHub.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

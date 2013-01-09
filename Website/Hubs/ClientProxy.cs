@@ -13,7 +13,6 @@ namespace Website.Hubs
 
         void updateCurrentSong(MusicHub.Song song);
         void updateActiveUsers(IEnumerable<MusicHub.User> users);
-        void updateStatus(MediaPlayerStatus status);
         void updateLibraries(LibraryInfo[] libraries);
     }
 
@@ -61,11 +60,6 @@ namespace Website.Hubs
             Trace.WriteLine(text, "LOG");
 
             this._clients.log(text);
-        }
-
-        public void updateStatus(MediaPlayerStatus status)
-        {
-            this._clients.updateStatus(new { status = status.ToString() });
         }
 
         private object ConvertSong(MusicHub.Song song)

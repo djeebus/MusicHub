@@ -12,6 +12,7 @@ namespace MusicHub
         public string Id { get; set; }
         public string ExternalId { get; set; }
         public string LibraryId { get; set; }
+        public string UserId { get; set; }
 
         public string Title { get; set; }
         public string Artist { get; set; }

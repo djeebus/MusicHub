@@ -10,10 +10,11 @@ namespace MusicHub
         Song CurrentSong { get; }
 
         event EventHandler<SongEventArgs> SongStarted;
+        event EventHandler<SongEventArgs> SongFinished;
 
         void Play();
 
-        HateResult Hate(string userId, string songId, int currentListeners);
+        HateResult Hate(string userId, int currentListeners);
 
         void SkipTrack();
 

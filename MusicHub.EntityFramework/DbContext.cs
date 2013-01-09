@@ -22,7 +22,7 @@ namespace MusicHub.EntityFramework
 
         public DbContext()
         {
-            this.Configuration.AutoDetectChangesEnabled = false;
+            //this.Configuration.AutoDetectChangesEnabled = false;
         }
     }
 }
