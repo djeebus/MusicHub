@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -53,7 +54,15 @@ namespace MusicHub
                 lock (_queue)
                     libraryInfo = _queue.Dequeue();
 
-                library = _factory.Create(libraryInfo);
+                try
+                {
+                    library = _factory.Create(libraryInfo);
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(string.Format("Error creating library {0}: {1}", libraryInfo.Id, ex), "SongSpider");
+                    continue;
+                }
 
                 try
                 {
@@ -61,7 +70,7 @@ namespace MusicHub
                 }
                 catch (Exception ex)
                 {
-                    this.Status = ex.ToString();
+                    Trace.WriteLine(string.Format("Error processing library {0}: {1}", libraryInfo.Id, ex), "SongSpider");
                 }
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -43,7 +44,7 @@ namespace MusicHub.Implementation
 
             _mediaPlayer.SongFinished += _mediaPlayer_SongFinished;
 
-            //UpdateAllLibraries();
+            UpdateAllLibraries();
         }
 
         private void UpdateAllLibraries()
@@ -95,11 +96,23 @@ namespace MusicHub.Implementation
         {
             var currentSong = this.CurrentSong;
 
-            var nextSong = _songRepository.GetRandomSong(currentSong);
-            if (nextSong == null)
-                return;
+            while (true)
+            {
+                var nextSong = _songRepository.GetRandomSong(currentSong);
+                if (nextSong == null)
+                    return;
 
-            this.PlaySong(nextSong);
+                try
+                {
+                    this.PlaySong(nextSong);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(string.Format("Error playing '{0}': {1}", nextSong.Id, ex), "DefaultJukebox");
+                    _libraryRepository.MarkAsPlayed(nextSong.LibraryId);
+                }
+            }
         }
 
         public void PlaySong(Song song)

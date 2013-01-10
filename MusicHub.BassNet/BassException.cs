@@ -8,8 +8,18 @@ namespace MusicHub.BassNet
 {
     public class BassException : Exception
     {
+        public BassException(int errorCode)
+            : this((BASSError)errorCode)
+        {
+        }
+
         public BassException()
-            : base(string.Format("Bass error: {0}", Bass.BASS_ErrorGetCode()))
+            : this(Bass.BASS_ErrorGetCode())
+        {
+        }
+
+        protected BassException(BASSError bassError)
+            : base(string.Format("Bass error: {0}", bassError))
         {
         }
     }

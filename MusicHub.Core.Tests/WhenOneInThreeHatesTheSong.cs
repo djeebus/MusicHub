@@ -11,7 +11,6 @@ namespace MusicHub.Core.Tests
     public class WhenOneInThreeHatesTheSong : JukeboxBaseTest
     {
         private string _userId = "userID";
-        private string _songId = "songID";
 
         HateResult _result;
         [TestInitialize]

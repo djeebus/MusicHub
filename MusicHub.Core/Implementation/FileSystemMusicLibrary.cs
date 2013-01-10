@@ -22,17 +22,25 @@ namespace MusicHub.Implementation
             return externalId;
         }
 
+        static readonly string[] Formats = new string[] {
+            "mp3",
+            "m4a",
+        };
+
 		public IEnumerable<MusicHub.Song> GetSongs()
 		{
-            var files = System.IO.Directory.GetFiles(this._rootFolder, "*.mp3", System.IO.SearchOption.AllDirectories);
-
-            foreach (var f in files)
+            foreach (var format in Formats)
             {
-                var s = this._metadataService.GetSongFromFilename(f);
+                var files = System.IO.Directory.GetFiles(this._rootFolder, string.Format("*.{0}", format), System.IO.SearchOption.AllDirectories);
 
-                s.ExternalId = f;
+                foreach (var f in files)
+                {
+                    var s = this._metadataService.GetSongFromFilename(f);
 
-                yield return s;
+                    s.ExternalId = f;
+
+                    yield return s;
+                }
             }
         }
     }
