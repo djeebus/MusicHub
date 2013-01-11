@@ -57,8 +57,10 @@ namespace MusicHub.ConsoleApp
             this.ChatCommandProcessors.Add("delete-library", ProcessChatCommandDeleteLibrary);
             this.ChatCommandProcessors.Add("sync-library", ProcessChatCommandSyncLibrary);
 
-            this.ChatCommandProcessors.Add("next", ProcessChatCommandNextSong);
             this.ChatCommandProcessors.Add("hate", ProcessChatCommandHateSong);
+            this.ChatCommandProcessors.Add("love", ProcessChatCommandLoveSong);
+
+            this.ChatCommandProcessors.Add("next", ProcessChatCommandNextSong);
             this.ChatCommandProcessors.Add("stop", ProcessChatCommandStop);
             this.ChatCommandProcessors.Add("play", ProcessChatCommandPlay);
         }
@@ -116,32 +118,51 @@ namespace MusicHub.ConsoleApp
             client.LocalUser.SendMessage(replyTarget, "Usage: .sync-library library-guid");
         }
 
+        private readonly List<string> _haters = new List<string>();
         private void ProcessChatCommandHateSong(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
         {
             var replyTarget = GetDefaultReplyTarget(client, source, targets);
             
-            var currentSong = _jukebox.CurrentSong;
-
-            if (currentSong == null)
-            {
-                client.LocalUser.SendMessage(replyTarget, "There is no song playing; please do not hate indiscriminately");
-                return;
-            }
-
-            SayInChannels(string.Format("{0} hates the current song", source.Name));
+            SayInChannels(string.Format("{0} hates this song", source.Name));
 
             var user = this._userRepository.EnsureUser(source.Name, source.Name);
 
             // subtract one for the bot
             var currentListeners = this.Clients.Sum(c => c.Channels.Sum(ch => ch.Users.Count)) - 1;
 
-            var result = _jukebox.Hate(user.Id, currentListeners);
+            HateResult result;
+            try
+            {
+                result = _jukebox.Hate(user.Id, currentListeners);
+            }
+            catch
+            {
+                client.LocalUser.SendMessage(replyTarget, "There is no song playing; please do not hate indiscriminately");
+                return;
+            }
 
             if (result.HatersNeeded != 0)
                 SayInChannels(string.Format("{0} more haters needed to skip the track!", result.HatersNeeded));
         }
 
-        List<string> _haters = new List<string>();
+        private void ProcessChatCommandLoveSong(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
+        {
+            var replyTarget = GetDefaultReplyTarget(client, source, targets);
+
+            SayInChannels(string.Format("{0} loves this song", source.Name));
+
+            var user = this._userRepository.EnsureUser(source.Name, source.Name);
+
+            try
+            {
+                _jukebox.Love(user.Id);
+            }
+            catch
+            {
+                client.LocalUser.SendMessage(replyTarget, "There is no song playing; please do not love w/o a partner in public!");
+                return;
+            }
+        }
 
         private void ProcessChatCommandDeleteLibrary(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
         {
@@ -345,6 +366,11 @@ namespace MusicHub.ConsoleApp
 
         protected override void OnChannelUserLeft(IrcDotNet.IrcChannel channel, IrcDotNet.IrcChannelUserEventArgs e)
         {
+            Action<string> say = msg => channel.Client.LocalUser.SendMessage(e.ChannelUser.User, msg);
+
+            say("The dev team 3 music bot welcomes you!");
+            say(string.Format("To listen to the stream, point your media player at 'http://{0}:{1}/'", Environment.MachineName, MusicHub.BassNet.BassNetMediaPlayer.PortNumber));
+            say("For more instructions, type '.help'. Remember to message me directly and not in the chat channel!");
         }
 
         protected override void OnChannelNoticeReceived(IrcDotNet.IrcChannel channel, IrcDotNet.IrcMessageEventArgs e)

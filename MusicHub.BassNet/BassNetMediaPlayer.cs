@@ -12,7 +12,7 @@ namespace MusicHub.BassNet
 {
     public class BassNetMediaPlayer : IMediaPlayer, IDisposable
     {
-        int port = 8888;
+        public const int PortNumber = 8888;
 
         ENCODECLIENTPROC myClientProc;
 
@@ -85,7 +85,7 @@ namespace MusicHub.BassNet
         {
             this._serverHandle = BassEnc.BASS_Encode_ServerInit(
                 _encoderHandle,
-                port.ToString(),
+                PortNumber.ToString(),
                 64 * 1024,
                 64 * 1024,
                 BASSEncodeServer.BASS_ENCODE_SERVER_DEFAULT,

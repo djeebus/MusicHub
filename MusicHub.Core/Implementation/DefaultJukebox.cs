@@ -143,15 +143,9 @@ namespace MusicHub.Implementation
 
         public HateResult Hate(string userId, int currentListeners)
         {
-            var currentSong = this.CurrentSong;
-            if (currentSong.UserId == userId)
-            {
-                this.SkipTrack();
-                return new HateResult();
-            }
-
             var hatersNeeded = GetHatersNeededToSkip(currentListeners);
 
+            // bail if user has already hated the song
             if (_haters.Contains(userId))
             {
                 return new HateResult
@@ -160,7 +154,17 @@ namespace MusicHub.Implementation
                 };
             }
 
+            var currentSong = this.CurrentSong;
+            if (currentSong == null)
+                throw new Exception("Cannot hate when there is no song playing");
+
             _affinityTracker.Record(userId, currentSong.Id, Affinity.Hate);
+
+            if (currentSong.UserId == userId)
+            {
+                this.SkipTrack();
+                return new HateResult();
+            }
 
             _haters.Add(userId);
             var currentHaters = _haters.Count;
@@ -178,6 +182,15 @@ namespace MusicHub.Implementation
             this.SkipTrack();
 
             return new HateResult();
+        }
+
+        public void Love(string userId)
+        {
+            var currentSong = this.CurrentSong;
+            if (currentSong == null)
+                throw new Exception("Cannot hate when there is no song playing");
+
+            _affinityTracker.Record(userId, currentSong.Id, Affinity.Hate);
         }
 
         public void UpdateLibrary(string libraryId)
@@ -207,6 +220,6 @@ namespace MusicHub.Implementation
         public Song[] FindSongs(SearchType type, string term)
         {
             throw new NotImplementedException();
-        }        
+        }
     }
 }
