@@ -56,8 +56,9 @@ namespace Website.App_Start
             kernel.Settings.AllowNullInjection = true;
 
             // MusicHub.Core
-            kernel.Bind<MusicHub.IJukebox>().To<MusicHub.Implementation.DefaultJukebox>().InSingletonScope();
             kernel.Bind<MusicHub.SongSpider>().ToSelf().InSingletonScope();
+            kernel.Bind<MusicHub.IJukebox>().To<MusicHub.Implementation.DefaultJukebox>().InSingletonScope()
+                .OnActivation(SubscribeToStatusChanges);
 
             // TagLibSharp
             kernel.Bind<MusicHub.IMetadataService>().To<MusicHub.TagLibSharp.TagLibSharpMetadataService>().InSingletonScope();
@@ -66,8 +67,7 @@ namespace Website.App_Start
             kernel.Bind<MusicHub.IAuthenticationService>().To<MusicHub.ActiveDirectory.ActiveDirectoryAuthenticationService>().InSingletonScope();
 
             // BassNet
-            kernel.Bind<MusicHub.IMediaPlayer>().To<MusicHub.BassNet.BassNetMediaPlayer>().InSingletonScope()
-                .OnActivation(SubscribeToStatusChanges);
+            kernel.Bind<MusicHub.IMediaPlayer>().To<MusicHub.BassNet.BassNetMediaPlayer>().InSingletonScope();
 
             // EntityFramework
             kernel.Bind<MusicHub.IConnectionRepository>().To<MusicHub.EntityFramework.ConnectionRepository>().InRequestScope();
@@ -96,15 +96,8 @@ namespace Website.App_Start
             kernel.Bind<SignalR.Infrastructure.IServerIdManager>().ToNull().InSingletonScope();
         }
 
-        private static void SubscribeToStatusChanges(Ninject.Activation.IContext arg1, MusicHub.BassNet.BassNetMediaPlayer mediaServer)
+        private static void SubscribeToStatusChanges(Ninject.Activation.IContext arg1, MusicHub.Implementation.DefaultJukebox jukebox)
         {
-            mediaServer.StatusChanged += (s,e) => {
-                var hub = SignalR.GlobalHost.ConnectionManager.GetHubContext<Website.Hubs.MusicControl>();
-
-                var clientProxy = new Website.Hubs.ClientProxy(hub.Clients, mediaServer);
-
-                clientProxy.updateStatus(e.Status);
-            };
         }
     }
 

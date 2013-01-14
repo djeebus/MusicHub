@@ -29,6 +29,7 @@ namespace Website.Hubs
         private readonly MusicHub.IConnectionRepository _connectionRepository;
         private readonly MusicHub.ISongRepository _songRepository;
         private readonly Website.Models.MediaLibraryFactory _mediaLibraryFactory;
+        private readonly MusicHub.IJukebox _jukebox;
 
 		public MusicControl(
 			MusicHub.IUserRepository userRepository,
@@ -36,6 +37,7 @@ namespace Website.Hubs
             MusicHub.ILibraryRepository libraryRepository,
             MusicHub.IConnectionRepository connectionRepository,
             MusicHub.ISongRepository songRepository,
+            MusicHub.IJukebox jukebox,
             Website.Models.MediaLibraryFactory mediaLibraryFactory)
 		{
 			this._userRepository = userRepository;
@@ -44,6 +46,7 @@ namespace Website.Hubs
             this._connectionRepository = connectionRepository;
             this._songRepository = songRepository;
             this._mediaLibraryFactory = mediaLibraryFactory;
+            this._jukebox = jukebox;
 		}
 
         public string UserId
@@ -93,7 +96,7 @@ namespace Website.Hubs
                     if (_clientProxy != null)
                         return _clientProxy;
 
-                    this._clientProxy = new ClientProxy(this.Clients, this._mediaServer);
+                    this._clientProxy = new ClientProxy(this.Clients, this._jukebox);
                 }
 
                 return this._clientProxy;
@@ -108,34 +111,21 @@ namespace Website.Hubs
             var libraries = this._libraryRepository.GetLibrariesForUser(this.UserId);
             this.ClientProxy.updateLibraries(libraries);
 
-			var song = this._mediaServer.CurrentSong;
+			var song = this._jukebox.CurrentSong;
 			this.ClientProxy.updateCurrentSong(song);
-
-            var status = this._mediaServer.Status;
-            this.ClientProxy.updateStatus(status);
 		}
 
 		public void hate()
 		{
-            var currentSong = this._mediaServer.CurrentSong;
+			var user = this._userRepository.EnsureUser(this.Context.User.Identity.Name, this.Context.User.Identity.Name);
 
-            PlayNextSong();
+            var currentSong = this._jukebox.CurrentSong;
+            var users = this._userRepository.GetOnlineUsers();
 
-			var user = this._userRepository.GetByName(this.Context.User.Identity.Name);
+            this._jukebox.Hate(user.Id, users.Length);
 
             this.ClientProxy.log(user.DisplayName + " hates " + currentSong.Title + " by " + currentSong.Artist);
 		}
-
-        private void PlayNextSong()
-        {
-            var nextSong = this._songRepository.GetRandomSong();
-
-            var mediaLibrary = this._mediaLibraryFactory.GetLibrary(nextSong.LibraryId);
-
-            var songUrl = mediaLibrary.GetSongUrl(nextSong.ExternalId);
-
-            this._mediaServer.PlaySong(nextSong, songUrl);
-        }
 
 		public void enqueueSong(string id)
 		{
@@ -148,11 +138,12 @@ namespace Website.Hubs
 
 		public void love()
 		{
+            this._jukebox.Love(this.UserId);
 		}
 
         public void play()
         {
-            PlayNextSong();
+            this._jukebox.Play();
         }
 
         public void stop()

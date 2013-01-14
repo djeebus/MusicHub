@@ -360,12 +360,21 @@ namespace MusicHub.ConsoleApp
         {
         }
 
+        // todo: fix bug that flips these messages
         protected override void OnChannelUserJoined(IrcDotNet.IrcChannel channel, IrcDotNet.IrcChannelUserEventArgs e)
         {
+            var user = this._userRepository.EnsureUser(e.ChannelUser.User.UserName, null);
+
+            this._userRepository.MarkAsOnline(user.Id, false);
         }
 
+        // todo: fix bug that flips these messages
         protected override void OnChannelUserLeft(IrcDotNet.IrcChannel channel, IrcDotNet.IrcChannelUserEventArgs e)
         {
+            var user = this._userRepository.EnsureUser(e.ChannelUser.User.UserName, null);
+
+            this._userRepository.MarkAsOnline(user.Id, true);
+
             Action<string> say = msg => channel.Client.LocalUser.SendMessage(e.ChannelUser.User, msg);
 
             say("The dev team 3 music bot welcomes you!");

@@ -43,7 +43,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MusicHub.Core\MusicHub.Core.csproj">
+    <ProjectReference Include="..\MusicHub.Core\MusicHub.Core.csproj">
       <Project>{041a5fe8-9561-4929-951c-0a861733ea68}</Project>
       <Name>MusicHub.Core</Name>
     </ProjectReference>

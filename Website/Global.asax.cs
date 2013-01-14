@@ -57,16 +57,7 @@ namespace Website
                 throw new ArgumentOutOfRangeException("currentPrincipal.Identity", currentPrincipal.Identity.GetType().ToString(), "Unknown identity");
 
             var userRepository = DependencyResolver.Current.GetService<MusicHub.IUserRepository>();
-            var user = userRepository.GetByName(currentPrincipal.Identity.Name);
-            if (user == null)
-            {
-                var authService = DependencyResolver.Current.GetService<MusicHub.IAuthenticationService>();
-                var displayName = authService.GetDisplayName(currentPrincipal.Identity.Name);
-                if (displayName == null)
-                    throw new ArgumentOutOfRangeException("currentPrincipal.Identity.Name", currentPrincipal.Identity.Name, "Unknown user");
-
-                user = userRepository.Create(currentPrincipal.Identity.Name, displayName);
-            }
+            var user = userRepository.EnsureUser(currentPrincipal.Identity.Name, currentPrincipal.Identity.Name);
 
             Thread.CurrentPrincipal = new Models.MusicHubPrincipal(user);
         }

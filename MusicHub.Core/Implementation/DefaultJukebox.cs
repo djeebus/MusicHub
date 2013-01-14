@@ -45,6 +45,12 @@ namespace MusicHub.Implementation
             _mediaPlayer.SongFinished += _mediaPlayer_SongFinished;
 
             UpdateAllLibraries();
+            MarkAllUsersAsAway();
+        }
+
+        private void MarkAllUsersAsAway()
+        {
+            this._songRepository.MarkUsersAsAway();
         }
 
         private void UpdateAllLibraries()

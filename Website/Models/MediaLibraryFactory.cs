@@ -6,7 +6,7 @@ using System.Web;
 
 namespace Website.Models
 {
-    public class MediaLibraryFactory
+    public class MediaLibraryFactory : IMusicLibraryFactory
     {
         private readonly ILibraryRepository _libraryRepository;
         private readonly IMetadataService _metadataService;
@@ -19,12 +19,8 @@ namespace Website.Models
             _metadataService = metadataService;
         }
 
-        public IMusicLibrary GetLibrary(string libraryId)
+        public IMusicLibrary Create(LibraryInfo library)
         {
-            var library = _libraryRepository.GetLibrary(libraryId);
-            if (library == null)
-                throw new ArgumentOutOfRangeException("libraryId");
-
             switch (library.Type)
             {
                 case LibraryType.SharedFolder:

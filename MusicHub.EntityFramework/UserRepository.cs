@@ -40,7 +40,7 @@ namespace MusicHub.EntityFramework
         public User[] GetOnlineUsers()
         {
             var onlineUsers = from u in this._db.Users
-                              where u.Connections.Count() > 0
+                              where u.IsAvailable
                               select u;
 
             return (from u in onlineUsers.ToArray()
@@ -61,7 +61,7 @@ namespace MusicHub.EntityFramework
             var dbUser = new DbUser
             {
                 Id = Guid.NewGuid(),
-                DisplayName = displayName,
+                DisplayName = displayName ?? username,
                 Username = username,
             };
 
@@ -69,6 +69,19 @@ namespace MusicHub.EntityFramework
             this._db.SaveChanges();
 
             return dbUser.ToModel();
+        }
+
+        public void MarkAsOnline(string userId, bool isOnline)
+        {
+            var guid = Guid.Parse(userId);
+
+            var dbUser = this._db.Users.FirstOrDefault(u => u.Id == guid);
+            if (dbUser == null)
+                throw new ArgumentOutOfRangeException("userId");
+
+            dbUser.IsAvailable = isOnline;
+
+            this._db.SaveChanges();
         }
     }
 }

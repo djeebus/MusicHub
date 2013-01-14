@@ -20,6 +20,8 @@ namespace MusicHub.EntityFramework
         [Required, StringLength(100)]
         public string DisplayName { get; set; }
 
+        public bool IsAvailable { get; set; }
+
         public virtual ICollection<DbConnection> Connections { get; set; }
 
         internal User ToModel()
@@ -30,6 +32,6 @@ namespace MusicHub.EntityFramework
                 DisplayName = this.DisplayName,
                 Username = this.Username,
             };
-        }
+        }        
     }
 }

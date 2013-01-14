@@ -9,8 +9,8 @@ namespace MusicHub
 	{
         User GetById(string userId);
         User[] GetOnlineUsers();
+        void MarkAsOnline(string userId, bool isOnline);
 
-        //User Create(string username, string displayName);
         User EnsureUser(string username, string displayName);
     }
 }

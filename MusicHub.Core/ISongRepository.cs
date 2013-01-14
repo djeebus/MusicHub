@@ -14,5 +14,7 @@ namespace MusicHub
         void PruneSongs(string libraryId);
 
         void MarkAsPlayed(string songId);
+
+        void MarkUsersAsAway();
     }
 }

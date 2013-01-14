@@ -117,5 +117,15 @@ ORDER BY NEWID() DESC";
 
             this._db.SaveChanges();
         }
+
+        public void MarkUsersAsAway()
+        {
+            foreach (var user in this._db.Users)
+            {
+                user.IsAvailable = false;
+            }
+
+            this._db.SaveChanges();
+        }
     }
 }
