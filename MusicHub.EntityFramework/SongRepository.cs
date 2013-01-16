@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace MusicHub.EntityFramework
             var guid = Guid.Parse(libraryId);
 
             var dbSong = (from s in _db.Songs
-                          where s.LibraryId == guid && s.ExternalId == externalId
+                          where s.LibraryId == guid && s.ExternalId == externalId 
                           select s).FirstOrDefault();
             if (dbSong == null)
             {
@@ -66,22 +67,14 @@ namespace MusicHub.EntityFramework
             return dbSong.ToModel();
         }
 
-        const string RandomSongQuery = @"
-DECLARE @oldestLibraryId UNIQUEIDENTIFIER
-
-SELECT TOP 1 @oldestLibraryId = l.LibraryId
-FROM Libraries l
-ORDER BY l.LastPlayed asc
-
-SELECT TOP 1 Id, l.LibraryId
-FROM Songs s
-    JOIN Libraries l ON s.LibraryId = l.LibraryId
-WHERE l.LibraryId = @oldestLibraryId
-ORDER BY NEWID() DESC";
-
         internal class SongStub
         {
             public Guid Id { get; set; }
+
+            public override string ToString()
+            {
+                return this.Id.ToString();
+            }
         }
 
         public Song GetRandomSong(Song previousSong)
@@ -96,11 +89,28 @@ ORDER BY NEWID() DESC";
             return song.ToModel();
         }
 
+        const string RandomSongQuery = @"
+SELECT TOP 1 Id
+FROM Songs s
+WHERE s.LibraryId = @oldestLibraryId
+ORDER BY NEWID() DESC";
+
         private SongStub GetNextSongModel()
         {
+            var lastLibrary = (from l in this._db.Libraries
+                                 where l.Songs.Count() > 0 && l.User.IsAvailable
+                                 orderby l.LastPlayed ascending
+                                 select l).FirstOrDefault();
+            if (lastLibrary == null)
+                return null;
+
+            Trace.WriteLine(string.Format("Oldest library: {0}", lastLibrary.Id), "SongRepository");
+
             var result = this._db.Database
-                .SqlQuery<SongStub>(RandomSongQuery)
+                .SqlQuery<SongStub>(RandomSongQuery, new SqlParameter("@oldestLibraryId", lastLibrary.Id))
                 .FirstOrDefault();
+
+            Trace.WriteLine(string.Format("Random song selected: {0}", result), "SongRepository");
             return result;
         }
 

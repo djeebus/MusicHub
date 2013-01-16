@@ -261,7 +261,7 @@ namespace IrcDotNet.Samples.Common
             client.LocalUser.MessageReceived += IrcClient_LocalUser_MessageReceived;
             client.LocalUser.JoinedChannel += IrcClient_LocalUser_JoinedChannel;
             client.LocalUser.LeftChannel += IrcClient_LocalUser_LeftChannel;
-
+            
             OnClientRegistered(client);
         }
 
@@ -307,21 +307,21 @@ namespace IrcDotNet.Samples.Common
             e.Channel.MessageReceived -= IrcClient_Channel_MessageReceived;
             e.Channel.NoticeReceived -= IrcClient_Channel_NoticeReceived;
 
-            OnLocalUserJoinedChannel(localUser, e);
+            OnLocalUserLeftChannel(localUser, e);
         }
 
         private void IrcClient_Channel_UserLeft(object sender, IrcChannelUserEventArgs e)
         {
             var channel = (IrcChannel)sender;
 
-            OnChannelUserJoined(channel, e);
+            OnChannelUserLeft(channel, e);
         }
 
         private void IrcClient_Channel_UserJoined(object sender, IrcChannelUserEventArgs e)
         {
             var channel = (IrcChannel)sender;
 
-            OnChannelUserLeft(channel, e);
+            OnChannelUserJoined(channel, e);
         }
 
         private void IrcClient_Channel_NoticeReceived(object sender, IrcMessageEventArgs e)

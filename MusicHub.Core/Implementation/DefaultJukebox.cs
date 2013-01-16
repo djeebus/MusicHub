@@ -85,7 +85,7 @@ namespace MusicHub.Implementation
             var currentSong = this.CurrentSong;
 
             this._songRepository.MarkAsPlayed(currentSong.Id);
-            this._libraryRepository.MarkAsPlayed(currentSong.LibraryId);
+            this._libraryRepository.MarkAsPlayed(currentSong.LibraryId, true);
 
             this.SkipTrack();
         }
@@ -116,7 +116,7 @@ namespace MusicHub.Implementation
                 catch (Exception ex)
                 {
                     Trace.WriteLine(string.Format("Error playing '{0}': {1}", nextSong.Id, ex), "DefaultJukebox");
-                    _libraryRepository.MarkAsPlayed(nextSong.LibraryId);
+                    _libraryRepository.MarkAsPlayed(nextSong.LibraryId, false);
                 }
             }
         }

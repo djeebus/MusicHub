@@ -67,10 +67,11 @@ namespace MusicHub
                 try
                 {
                     Process(libraryInfo.Id, library);
+                    this._libraryRepository.UpdateSyncResult(libraryInfo.Id, true, null);
                 }
                 catch (Exception ex)
                 {
-                    Trace.WriteLine(string.Format("Error processing library {0}: {1}", libraryInfo.Id, ex), "SongSpider");
+                    this._libraryRepository.UpdateSyncResult(libraryInfo.Id, false, ex.ToString());
                 }
             }
         }
@@ -79,12 +80,15 @@ namespace MusicHub
         {
             this._libraryRepository.UpdateLastSyncDate(libraryId);
 
+            Trace.WriteLine(string.Format("Getting songs for '{0}' ... ", libraryId), "SongSpider");
             foreach (var song in library.GetSongs())
             {
                 this._songRespository.UpsertSong(libraryId, song.ExternalId, song.Artist, song.Title, song.Album, song.Track, song.Year);
             }
 
+            Trace.WriteLine(string.Format("Pruning '{0}'", libraryId), "SongSpider");
             this._songRespository.PruneSongs(libraryId);
+            Trace.WriteLine(string.Format("Finished pruning library '{0}', pruning", libraryId), "SongSpider");
         }
     }
 }

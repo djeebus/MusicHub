@@ -35,6 +35,9 @@ namespace MusicHub.EntityFramework
 
         public DateTime? LastSync { get; set; }
 
+        public string ErrorMessage { get; set; }
+        public int ErrorsSinceLastSong { get; set; }
+
         private string GetName(DbLibrary library)
         {
             switch (library.Type)
@@ -49,7 +52,6 @@ namespace MusicHub.EntityFramework
                     throw new NotImplementedException();
             }
         }
-
 
         internal LibraryInfo ToModel()
         {

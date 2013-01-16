@@ -1,6 +1,8 @@
-﻿using IrcDotNet.Samples.Common;
+﻿using IrcDotNet;
+using IrcDotNet.Samples.Common;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -327,6 +329,9 @@ namespace MusicHub.ConsoleApp
 
         protected override void OnClientConnect(IrcDotNet.IrcClient client)
         {
+            var handler = this.ClientConnect;
+            if (handler != null)
+                handler(this, EventArgs.Empty);
         }
 
         protected override void OnClientDisconnect(IrcDotNet.IrcClient client)
@@ -337,40 +342,66 @@ namespace MusicHub.ConsoleApp
         }
 
         public event EventHandler ClientDisconnect;
+        public event EventHandler ClientConnect;
+
+        const string ChannelName = "#music";
 
         protected override void OnClientRegistered(IrcDotNet.IrcClient client)
         {
-            client.Channels.Join("#music");
+            client.Channels.Join(ChannelName);
         }
 
         protected override void OnLocalUserJoinedChannel(IrcDotNet.IrcLocalUser localUser, IrcDotNet.IrcChannelEventArgs e)
         {
+            Trace.WriteLine(string.Format("Local user joined channel: {0}", e.Channel.Name), "MusicHubBot");
+
+            e.Channel.UsersListReceived += Channel_UsersListReceived;
+        }
+
+        void Channel_UsersListReceived(object sender, EventArgs e)
+        {
+            var channel = (IrcChannel)sender;
+
+            foreach (var chanUser in channel.Users)
+            {
+                if (chanUser.User is IrcLocalUser)
+                    continue; // ignore the bot
+
+                var user = this._userRepository.EnsureUser(chanUser.User.NickName, null);
+                this._userRepository.MarkAsOnline(user.Id, true);
+            }
+
             this._jukebox.Play();
         }
 
         protected override void OnLocalUserLeftChannel(IrcDotNet.IrcLocalUser localUser, IrcDotNet.IrcChannelEventArgs e)
         {
+            Trace.WriteLine(string.Format("Local user left channel: {0}", e.Channel.Name), "MusicHubBot");
         }
 
         protected override void OnLocalUserNoticeReceived(IrcDotNet.IrcLocalUser localUser, IrcDotNet.IrcMessageEventArgs e)
         {
+            Trace.WriteLine(string.Format("Local user notice received from {0}: {1}", e.Source.Name, e.Text), "MusicHubBot");
         }
 
         protected override void OnLocalUserMessageReceived(IrcDotNet.IrcLocalUser localUser, IrcDotNet.IrcMessageEventArgs e)
         {
+            Trace.WriteLine(string.Format("Local user message received from {0}: {1}", e.Source.Name, e.Text), "MusicHubBot");
         }
 
-        // todo: fix bug that flips these messages
-        protected override void OnChannelUserJoined(IrcDotNet.IrcChannel channel, IrcDotNet.IrcChannelUserEventArgs e)
+        protected override void OnChannelUserLeft(IrcDotNet.IrcChannel channel, IrcDotNet.IrcChannelUserEventArgs e)
         {
+            Trace.WriteLine(string.Format("{0}: {1} left channel", channel.Name, e.ChannelUser.User.NickName), "MusicHubBot");
+
             var user = this._userRepository.EnsureUser(e.ChannelUser.User.UserName, null);
 
             this._userRepository.MarkAsOnline(user.Id, false);
         }
 
-        // todo: fix bug that flips these messages
-        protected override void OnChannelUserLeft(IrcDotNet.IrcChannel channel, IrcDotNet.IrcChannelUserEventArgs e)
+        protected override void OnChannelUserJoined(IrcDotNet.IrcChannel channel, IrcDotNet.IrcChannelUserEventArgs e)
         {
+            Trace.WriteLine(string.Format("{0}: {1} joined channel", channel.Name, e.ChannelUser.User.NickName), "MusicHubBot");
+
             var user = this._userRepository.EnsureUser(e.ChannelUser.User.UserName, null);
 
             this._userRepository.MarkAsOnline(user.Id, true);
@@ -384,10 +415,12 @@ namespace MusicHub.ConsoleApp
 
         protected override void OnChannelNoticeReceived(IrcDotNet.IrcChannel channel, IrcDotNet.IrcMessageEventArgs e)
         {
+            Trace.WriteLine(string.Format("{0}: notice received from {1} - {2}", channel.Name, e.Source.Name, e.Text), "MusicHubBot");
         }
 
         protected override void OnChannelMessageReceived(IrcDotNet.IrcChannel channel, IrcDotNet.IrcMessageEventArgs e)
         {
+            Trace.WriteLine(string.Format("{0}: message received from {1} - {2}", channel.Name, e.Source.Name, e.Text), "MusicHubBot");
         }
     }
 }

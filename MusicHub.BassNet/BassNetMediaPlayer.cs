@@ -106,6 +106,8 @@ namespace MusicHub.BassNet
 
         public void PlaySong(Song song, string mediaUrl)
         {
+            Trace.WriteLine(string.Format("Playing {0} [{1}]", song, mediaUrl), "BassNetMediaPlayer");
+
             this.Stop();
 
             int streamId;
@@ -136,6 +138,8 @@ namespace MusicHub.BassNet
         {
             if (!_currentSongStreamId.HasValue)
                 return;
+
+            Trace.WriteLine("Stopping current song", "BassNetMediaPlayer");
 
             if (!BassMix.BASS_Mixer_ChannelRemove(_currentSongStreamId.Value))
                 throw new BassException();

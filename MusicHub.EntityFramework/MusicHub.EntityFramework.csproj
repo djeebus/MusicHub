@@ -72,6 +72,10 @@
     <Compile Include="Migrations\201301141445330_TrackActiveUsers.Designer.cs">
       <DependentUpon>201301141445330_TrackActiveUsers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201301151946264_TrackErrors.cs" />
+    <Compile Include="Migrations\201301151946264_TrackErrors.Designer.cs">
+      <DependentUpon>201301151946264_TrackErrors.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="SongRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,6 +103,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201301141445330_TrackActiveUsers.resx">
       <DependentUpon>201301141445330_TrackActiveUsers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201301151946264_TrackErrors.resx">
+      <DependentUpon>201301151946264_TrackErrors.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

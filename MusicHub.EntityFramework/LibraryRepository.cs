@@ -81,6 +81,22 @@ namespace MusicHub.EntityFramework
             this._db.SaveChanges();
         }
 
+        public void UpdateSyncResult(string libraryId, bool success, string message)
+        {
+            var guid = Guid.Parse(libraryId);
+
+            var dbLibrary = this._db.Libraries.FirstOrDefault(l => l.Id == guid);
+            if (dbLibrary == null)
+                throw new ArgumentOutOfRangeException("libraryId", libraryId, "Library ID does not exist");
+
+            if (success)
+                dbLibrary.ErrorMessage = null;
+            else
+                dbLibrary.ErrorMessage = message ?? "Failed to spider for songs";
+
+            this._db.SaveChanges();
+        }
+
         public LibraryInfo GetLibrary(string libraryId)
         {
             var guid = Guid.Parse(libraryId);
@@ -92,7 +108,7 @@ namespace MusicHub.EntityFramework
             return dbLibrary.ToModel();
         }
 
-        public void MarkAsPlayed(string libraryId)
+        public void MarkAsPlayed(string libraryId, bool success)
         {
             var guid = Guid.Parse(libraryId);
 
@@ -101,7 +117,14 @@ namespace MusicHub.EntityFramework
                 throw new ArgumentOutOfRangeException("libraryId", libraryId, "Unknown library id");
 
             library.LastPlayed = DateTime.Now;
-            library.PlayCount++;
+            if (success)
+            {
+                library.ErrorsSinceLastSong = 0;
+                library.PlayCount++;
+            }
+            else
+                library.ErrorsSinceLastSong++;
+
             this._db.SaveChanges();
         }
     }
