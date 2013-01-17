@@ -64,6 +64,7 @@ namespace MusicHub.EntityFramework
                 Location = this.Path,
                 Type = this.Type,
                 TotalSongs = this.Songs == null ? 0 : this.Songs.Count(),
+                ErrorMessage = this.ErrorMessage,
             };
         }
     }

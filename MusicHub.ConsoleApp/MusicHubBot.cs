@@ -13,6 +13,7 @@ namespace MusicHub.ConsoleApp
     public class MusicHubBot : IrcBot
     {
         private readonly IUserRepository _userRepository;
+        private readonly ILibraryRepository _libraryRepository;
         private readonly IMediaPlayer _mediaPlayer;
         private readonly IJukebox _jukebox;
 
@@ -20,13 +21,12 @@ namespace MusicHub.ConsoleApp
             IJukebox jukebox,
             ILibraryRepository libraryRepository, 
             IUserRepository userRepository, 
-            IMediaPlayer mediaPlayer,
-            ISongRepository songRepository,
-            IMetadataService metadataService)
+            IMediaPlayer mediaPlayer)
         {
             _jukebox = jukebox;
             _userRepository = userRepository;
             _mediaPlayer = mediaPlayer;
+            _libraryRepository = libraryRepository;
 
             _jukebox.SongStarted += _jukebox_SongStarted;
         }
@@ -34,6 +34,12 @@ namespace MusicHub.ConsoleApp
         void _jukebox_SongStarted(object sender, SongEventArgs e)
         {
             SayInChannels(e.Song.ToString());
+            var channels = from client in this.Clients
+                           from channel in client.Channels
+                           select channel;
+
+            foreach (var channel in channels)
+                channel.SetTopic(string.Format("MUSIC! {0}", e.Song));
         }
 
         private void SayInChannels(string msg)
@@ -348,12 +354,15 @@ namespace MusicHub.ConsoleApp
 
         protected override void OnClientRegistered(IrcDotNet.IrcClient client)
         {
+            //client.SendRawMessage("MSG nickserv register temp123! musicbot@kabbage.com");
+            client.SendRawMessage("MSG nickserv identify temp123!");
+
             client.Channels.Join(ChannelName);
         }
 
         protected override void OnLocalUserJoinedChannel(IrcDotNet.IrcLocalUser localUser, IrcDotNet.IrcChannelEventArgs e)
         {
-            Trace.WriteLine(string.Format("Local user joined channel: {0}", e.Channel.Name), "MusicHubBot");
+            Trace.WriteLine(string.Format("Bot joined {0}", e.Channel.Name), "MusicHubBot");
 
             e.Channel.UsersListReceived += Channel_UsersListReceived;
         }
@@ -376,7 +385,7 @@ namespace MusicHub.ConsoleApp
 
         protected override void OnLocalUserLeftChannel(IrcDotNet.IrcLocalUser localUser, IrcDotNet.IrcChannelEventArgs e)
         {
-            Trace.WriteLine(string.Format("Local user left channel: {0}", e.Channel.Name), "MusicHubBot");
+            Trace.WriteLine(string.Format("Bot left {0}", e.Channel.Name), "MusicHubBot");
         }
 
         protected override void OnLocalUserNoticeReceived(IrcDotNet.IrcLocalUser localUser, IrcDotNet.IrcMessageEventArgs e)
@@ -411,6 +420,21 @@ namespace MusicHub.ConsoleApp
             say("The dev team 3 music bot welcomes you!");
             say(string.Format("To listen to the stream, point your media player at 'http://{0}:{1}/'", Environment.MachineName, MusicHub.BassNet.BassNetMediaPlayer.PortNumber));
             say("For more instructions, type '.help'. Remember to message me directly and not in the chat channel!");
+
+            var libraries = _libraryRepository.GetLibrariesForUser(user.Id);
+            if (libraries == null)
+                return;
+
+            var brokenLibraries = libraries.Where(l => !string.IsNullOrWhiteSpace(l.ErrorMessage)).ToArray();
+            if (brokenLibraries.Length == 0)
+                return;
+
+            foreach (var library in brokenLibraries)
+            {
+                say(string.Format("The {0} library: '{1}' is broken with the following error:", library.Type, library.Name));
+                say(library.ErrorMessage);
+                say(string.Format("After you fix the error, type '.sync-library {0}'", library.Id));
+            }
         }
 
         protected override void OnChannelNoticeReceived(IrcDotNet.IrcChannel channel, IrcDotNet.IrcMessageEventArgs e)

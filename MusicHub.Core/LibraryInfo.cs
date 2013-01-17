@@ -18,5 +18,7 @@ namespace MusicHub
         public LibraryType Type { get; set; }
 
         public long TotalSongs { get; set; }
+
+        public string ErrorMessage { get; set; }
     }
 }
