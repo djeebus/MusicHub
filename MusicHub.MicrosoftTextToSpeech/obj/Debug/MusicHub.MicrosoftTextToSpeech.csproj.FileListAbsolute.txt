@@ -1,0 +1,7 @@
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.MicrosoftTextToSpeech\bin\Debug\MusicHub.MicrosoftTextToSpeech.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.MicrosoftTextToSpeech\bin\Debug\MusicHub.MicrosoftTextToSpeech.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.MicrosoftTextToSpeech\bin\Debug\MusicHub.Core.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.MicrosoftTextToSpeech\bin\Debug\MusicHub.Core.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.MicrosoftTextToSpeech\obj\Debug\MusicHub.MicrosoftTextToSpeech.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.MicrosoftTextToSpeech\obj\Debug\MusicHub.MicrosoftTextToSpeech.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.MicrosoftTextToSpeech\obj\Debug\MusicHub.MicrosoftTextToSpeech.csprojResolveAssemblyReference.cache

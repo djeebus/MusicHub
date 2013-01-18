@@ -1,0 +1,14 @@
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\bin\Debug\bass.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\bin\Debug\bass_ac3.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\bin\Debug\lame.exe
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\bin\Debug\lame_enc.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\bin\Debug\bassmix.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\bin\Debug\bassenc.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\bin\Debug\MusicHub.BassNet.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\bin\Debug\MusicHub.BassNet.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\bin\Debug\Bass.Net.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\bin\Debug\MusicHub.Core.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\bin\Debug\MusicHub.Core.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\obj\Debug\MusicHub.BassNet.csprojResolveAssemblyReference.cache
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\obj\Debug\MusicHub.BassNet.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.BassNet\obj\Debug\MusicHub.BassNet.pdb

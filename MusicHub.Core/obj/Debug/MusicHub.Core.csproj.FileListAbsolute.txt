@@ -1,0 +1,5 @@
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core\bin\Debug\MusicHub.Core.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core\bin\Debug\MusicHub.Core.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core\obj\Debug\MusicHub.Core.csprojResolveAssemblyReference.cache
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core\obj\Debug\MusicHub.Core.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core\obj\Debug\MusicHub.Core.pdb

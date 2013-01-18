@@ -1,0 +1,10 @@
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core.Tests\bin\Debug\MusicHub.Core.Tests.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core.Tests\bin\Debug\MusicHub.Core.Tests.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core.Tests\bin\Debug\Moq.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core.Tests\bin\Debug\MusicHub.Core.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core.Tests\bin\Debug\MusicHub.Core.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core.Tests\bin\Debug\Moq.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core.Tests\bin\Debug\Moq.xml
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core.Tests\obj\Debug\MusicHub.Core.Tests.csprojResolveAssemblyReference.cache
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core.Tests\obj\Debug\MusicHub.Core.Tests.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.Core.Tests\obj\Debug\MusicHub.Core.Tests.pdb

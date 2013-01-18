@@ -1,0 +1,10 @@
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.TagLibSharp\bin\Debug\MusicHub.TagLibSharp.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.TagLibSharp\bin\Debug\MusicHub.TagLibSharp.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.TagLibSharp\bin\Debug\MusicHub.Core.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.TagLibSharp\bin\Debug\policy.2.0.taglib-sharp.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.TagLibSharp\bin\Debug\taglib-sharp.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.TagLibSharp\bin\Debug\MusicHub.Core.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.TagLibSharp\bin\Debug\policy.2.0.taglib-sharp.config
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.TagLibSharp\obj\Debug\MusicHub.TagLibSharp.csprojResolveAssemblyReference.cache
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.TagLibSharp\obj\Debug\MusicHub.TagLibSharp.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.TagLibSharp\obj\Debug\MusicHub.TagLibSharp.pdb

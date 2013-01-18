@@ -1,0 +1,9 @@
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.GooglePlay\bin\Debug\MusicHub.GooglePlay.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.GooglePlay\bin\Debug\MusicHub.GooglePlay.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.GooglePlay\bin\Debug\MusicHub.Core.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.GooglePlay\bin\Debug\Newtonsoft.Json.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.GooglePlay\bin\Debug\MusicHub.Core.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.GooglePlay\bin\Debug\Newtonsoft.Json.xml
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.GooglePlay\obj\Debug\MusicHub.GooglePlay.csprojResolveAssemblyReference.cache
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.GooglePlay\obj\Debug\MusicHub.GooglePlay.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.GooglePlay\obj\Debug\MusicHub.GooglePlay.pdb

@@ -1,0 +1,15 @@
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\bin\Debug\MusicHub.EntityFramework.dll.config
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\bin\Debug\MusicHub.EntityFramework.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\bin\Debug\MusicHub.EntityFramework.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\bin\Debug\EntityFramework.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\bin\Debug\MusicHub.Core.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\bin\Debug\MusicHub.Core.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\bin\Debug\EntityFramework.xml
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\obj\Debug\MusicHub.EntityFramework.csprojResolveAssemblyReference.cache
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\obj\Debug\MusicHub.EntityFramework.Migrations.InitialCreate.resources
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\obj\Debug\MusicHub.EntityFramework.Migrations.AddAffinityTracking.resources
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\obj\Debug\MusicHub.EntityFramework.Migrations.AddSongPlayCounts.resources
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\obj\Debug\MusicHub.EntityFramework.csproj.GenerateResource.Cache
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\obj\Debug\MusicHub.EntityFramework.dll
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\obj\Debug\MusicHub.EntityFramework.pdb
+C:\Users\digitaljeebus\Documents\Visual Studio 2012\Projects\MusicHub\MusicHub.EntityFramework\obj\Debug\MusicHub.EntityFramework.Migrations.TrackActiveUsers.resources
