@@ -14,6 +14,7 @@ namespace MusicHub.Implementation
         private readonly IMusicLibraryFactory _musicLibraryFactory;
         private readonly ISongRepository _songRepository;
         private readonly IAffinityTracker _affinityTracker;
+        private readonly IUserRepository _userRepository;
         private readonly SongSpider _spider;
 
         private List<string> _haters = new List<string>();
@@ -33,6 +34,7 @@ namespace MusicHub.Implementation
             ILibraryRepository libraryRepository,
             ISongRepository songRepository,
             IAffinityTracker affinityTracker,
+            IUserRepository userRepository,
             SongSpider spider)
         {
             _mediaPlayer = mediaPlayer;
@@ -41,6 +43,7 @@ namespace MusicHub.Implementation
             _songRepository = songRepository;
             _spider = spider;
             _affinityTracker = affinityTracker;
+            _userRepository = userRepository;
 
             _mediaPlayer.SongFinished += _mediaPlayer_SongFinished;
 
@@ -147,9 +150,11 @@ namespace MusicHub.Implementation
             return (int)Math.Ceiling(currentListeners * .5m);
         }
 
-        public HateResult Hate(string userId, int currentListeners)
+        public HateResult Hate(string userId)
         {
-            var hatersNeeded = GetHatersNeededToSkip(currentListeners);
+            var currentListeners = _userRepository.GetOnlineUsers();
+
+            var hatersNeeded = GetHatersNeededToSkip(currentListeners.Length);
 
             // bail if user has already hated the song
             if (_haters.Contains(userId))

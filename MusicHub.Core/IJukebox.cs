@@ -14,7 +14,7 @@ namespace MusicHub
 
         void Play();
 
-        HateResult Hate(string userId, int currentListeners);
+        HateResult Hate(string userId);
         void Love(string userId);
 
         void SkipTrack();

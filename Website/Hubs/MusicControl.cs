@@ -120,9 +120,8 @@ namespace Website.Hubs
 			var user = this._userRepository.EnsureUser(this.Context.User.Identity.Name, this.Context.User.Identity.Name);
 
             var currentSong = this._jukebox.CurrentSong;
-            var users = this._userRepository.GetOnlineUsers();
 
-            this._jukebox.Hate(user.Id, users.Length);
+            this._jukebox.Hate(user.Id);
 
             this.ClientProxy.log(user.DisplayName + " hates " + currentSong.Title + " by " + currentSong.Artist);
 		}

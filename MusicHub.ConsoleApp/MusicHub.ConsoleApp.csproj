@@ -55,10 +55,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BotCommands\AddLibrary.cs" />
+    <Compile Include="BotCommands\BaseCommand.cs" />
+    <Compile Include="BotCommands\DeleteLibrary.cs" />
+    <Compile Include="BotCommands\Hate.cs" />
+    <Compile Include="BotCommands\ICommand.cs" />
+    <Compile Include="BotCommands\ListLibraries.cs" />
+    <Compile Include="BotCommands\Love.cs" />
+    <Compile Include="BotCommands\Skip.cs" />
+    <Compile Include="BotCommands\Play.cs" />
+    <Compile Include="BotCommands\Stop.cs" />
+    <Compile Include="BotCommands\SyncLibrary.cs" />
     <Compile Include="Irc\ConsoleUtilities.cs" />
     <Compile Include="Irc\Extensions.cs" />
     <Compile Include="Irc\InvalidCommandParametersException.cs" />
     <Compile Include="Irc\IrcBot.cs" />
+    <Compile Include="Irc\IrcHelper.cs" />
     <Compile Include="MusicHubBot.cs" />
     <Compile Include="MusicHubNinjectModule.cs" />
     <Compile Include="MusicLibraryFactory.cs" />

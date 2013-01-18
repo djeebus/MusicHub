@@ -1,4 +1,5 @@
 ﻿using IrcDotNet.Samples.Common;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +12,10 @@ namespace MusicHub.ConsoleApp
     public class MusicHubBot : IrcBot
     {
         private readonly IUserRepository _userRepository;
+        private readonly ILibraryRepository _libraryRepository;
         private readonly IMediaPlayer _mediaPlayer;
         private readonly IJukebox _jukebox;
+        private readonly IKernel _kernel;
 
         public MusicHubBot(
             IJukebox jukebox,
@@ -20,11 +23,14 @@ namespace MusicHub.ConsoleApp
             IUserRepository userRepository, 
             IMediaPlayer mediaPlayer,
             ISongRepository songRepository,
-            IMetadataService metadataService)
+            IMetadataService metadataService, 
+            IKernel kernel)
         {
             _jukebox = jukebox;
             _userRepository = userRepository;
+            _libraryRepository = libraryRepository;
             _mediaPlayer = mediaPlayer;
+            _kernel = kernel;
 
             _jukebox.SongStarted += _jukebox_SongStarted;
         }
@@ -49,268 +55,25 @@ namespace MusicHub.ConsoleApp
         {
         }
 
+        private readonly List<BotCommands.ICommand> _commands = new List<BotCommands.ICommand>();
         protected override void InitializeChatCommandProcessors()
         {
+            _commands.AddRange(new BotCommands.ICommand[] {
+                _kernel.Get<BotCommands.AddLibrary>(),
+                _kernel.Get<BotCommands.DeleteLibrary>(),
+                _kernel.Get<BotCommands.Hate>(),
+                _kernel.Get<BotCommands.ListLibraries>(),
+                _kernel.Get<BotCommands.Love>(),
+                _kernel.Get<BotCommands.Skip>(),
+                _kernel.Get<BotCommands.Play>(),
+                _kernel.Get<BotCommands.Stop>(),
+                _kernel.Get<BotCommands.SyncLibrary>(),
+            });
+
+            foreach (var command in _commands)
+                this.ChatCommandProcessors.Add(command.Command, command.ExecuteCommand);
+
             this.ChatCommandProcessors.Add("help", ProcessChatCommandHelp);
-            this.ChatCommandProcessors.Add("add-library", ProcessChatCommandAddLibrary);
-            this.ChatCommandProcessors.Add("list-libraries", ProcessChatCommandListLibraries);
-            this.ChatCommandProcessors.Add("delete-library", ProcessChatCommandDeleteLibrary);
-            this.ChatCommandProcessors.Add("sync-library", ProcessChatCommandSyncLibrary);
-
-            this.ChatCommandProcessors.Add("hate", ProcessChatCommandHateSong);
-            this.ChatCommandProcessors.Add("love", ProcessChatCommandLoveSong);
-
-            this.ChatCommandProcessors.Add("next", ProcessChatCommandNextSong);
-            this.ChatCommandProcessors.Add("stop", ProcessChatCommandStop);
-            this.ChatCommandProcessors.Add("play", ProcessChatCommandPlay);
-        }
-
-        private void ProcessChatCommandPlay(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
-        {
-            var replyTarget = GetDefaultReplyTarget(client, source, targets);
-
-            _jukebox.Play();
-        }
-
-        private void ProcessChatCommandStop(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
-        {
-            var replyTarget = GetDefaultReplyTarget(client, source, targets);
-
-            //client.LocalUser.SendMessage(replyTarget, "Music has been stopped");
-            SayInChannels(string.Format("{0} has stopped the music", source.Name));
-
-            this._jukebox.Stop();
-        }
-
-        private void ProcessChatCommandNextSong(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
-        {
-            this._jukebox.SkipTrack();
-        }
-
-        private void ProcessChatCommandSyncLibrary(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
-        {
-            var user = _userRepository.EnsureUser(source.Name, source.Name);
-
-            var replyTarget = GetDefaultReplyTarget(client, source, targets);
-
-            parameters = NormalizeParameters(parameters);
-
-            if (parameters.Count == 0)
-            {
-                InvalidSyncLibraryCommand(client, replyTarget, "Missing library id");
-                return;
-            }
-
-            if (parameters.Count > 1)
-            {
-                InvalidSyncLibraryCommand(client, replyTarget, "Too many commands");
-                return;
-            }
-
-            _jukebox.UpdateLibrary(parameters[0]);
-
-            client.LocalUser.SendMessage(replyTarget, "Library sync has been queued");
-        }
-
-        private void InvalidSyncLibraryCommand(IrcDotNet.IrcClient client, IList<IrcDotNet.IIrcMessageTarget> replyTarget, string commandError)
-        {
-            client.LocalUser.SendMessage(replyTarget, string.Format("Invalid .sync-command: {0}", commandError));
-            client.LocalUser.SendMessage(replyTarget, "Usage: .sync-library library-guid");
-        }
-
-        private readonly List<string> _haters = new List<string>();
-        private void ProcessChatCommandHateSong(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
-        {
-            var replyTarget = GetDefaultReplyTarget(client, source, targets);
-            
-            SayInChannels(string.Format("{0} hates this song", source.Name));
-
-            var user = this._userRepository.EnsureUser(source.Name, source.Name);
-
-            // subtract one for the bot
-            var currentListeners = this.Clients.Sum(c => c.Channels.Sum(ch => ch.Users.Count)) - 1;
-
-            HateResult result;
-            try
-            {
-                result = _jukebox.Hate(user.Id, currentListeners);
-            }
-            catch
-            {
-                client.LocalUser.SendMessage(replyTarget, "There is no song playing; please do not hate indiscriminately");
-                return;
-            }
-
-            if (result.HatersNeeded != 0)
-                SayInChannels(string.Format("{0} more haters needed to skip the track!", result.HatersNeeded));
-        }
-
-        private void ProcessChatCommandLoveSong(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
-        {
-            var replyTarget = GetDefaultReplyTarget(client, source, targets);
-
-            SayInChannels(string.Format("{0} loves this song", source.Name));
-
-            var user = this._userRepository.EnsureUser(source.Name, source.Name);
-
-            try
-            {
-                _jukebox.Love(user.Id);
-            }
-            catch
-            {
-                client.LocalUser.SendMessage(replyTarget, "There is no song playing; please do not love w/o a partner in public!");
-                return;
-            }
-        }
-
-        private void ProcessChatCommandDeleteLibrary(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
-        {
-            var user = _userRepository.EnsureUser(source.Name, source.Name);
-
-            var replyTarget = GetDefaultReplyTarget(client, source, targets);
-
-            parameters = NormalizeParameters(parameters);
-
-            if (parameters.Count == 0)
-            {
-                InvalidDeleteLibraryCommand(client, replyTarget, "Missing library id");
-                return;
-            }
-
-            if (parameters.Count > 1)
-            {
-                InvalidDeleteLibraryCommand(client, replyTarget, "Too many commands");
-                return;
-            }
-
-            var libraryId = parameters[0];
-            this._jukebox.DeleteLibrary(libraryId);
-
-            client.LocalUser.SendMessage(replyTarget, "Library has been deleted");
-        }
-
-        private void InvalidDeleteLibraryCommand(IrcDotNet.IrcClient client, IList<IrcDotNet.IIrcMessageTarget> replyTarget, string commandError)
-        {
-            client.LocalUser.SendMessage(replyTarget, string.Format("Invalid .delete-command: {0}", commandError));
-            client.LocalUser.SendMessage(replyTarget, "Usage: .delete-library library-guid");
-        }
-
-        private void ProcessChatCommandListLibraries(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
-        {
-            var user = _userRepository.EnsureUser(source.Name, source.Name);
-
-            var replyTarget = GetDefaultReplyTarget(client, source, targets);
-
-            var libraries = this._jukebox.GetLibrariesForUser(user.Id);
-
-            client.LocalUser.SendMessage(replyTarget, "Your libraries: ");
-            foreach (var library in libraries)
-            {
-                client.LocalUser.SendMessage(replyTarget, string.Format("  {0} (songs: {1}) (id: {2})", library.Name, library.TotalSongs, library.Id));
-            }
-        }
-
-        private void ProcessChatCommandAddLibrary(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
-        {
-            var user = _userRepository.EnsureUser(source.Name, source.Name);
-
-            var replyTarget = GetDefaultReplyTarget(client, source, targets);
-
-            parameters = NormalizeParameters(parameters);
-
-            if (parameters.Count < 2)
-            {
-                InvalidAddLibraryCommand(client, replyTarget);
-                return;
-            }
-
-            var type = parameters[0];
-            switch ((type ?? string.Empty).ToLower())
-            {
-                case "folder":
-                    if (parameters.Count != 2)
-                    {
-                        InvalidAddLibraryCommand(client, replyTarget);
-                        return;
-                    }
-
-                    var path = parameters[1];
-                    _jukebox.CreateLibrary(user.Id, LibraryType.SharedFolder, path, null, null);
-
-                    client.LocalUser.SendMessage(replyTarget, string.Format("'{0}' has been added as a library, now syncing ...", path));
-                    break;
-
-                case "google":
-                    if (parameters.Count != 3)
-                    {
-                        InvalidAddLibraryCommand(client, replyTarget);
-                        return;
-                    }
-
-                    var username = parameters[1];
-                    var password = parameters[2];
-
-
-                    _jukebox.CreateLibrary(user.Id, LibraryType.GoogleMusic, null, username, password);
-                    client.LocalUser.SendMessage(replyTarget, string.Format("{0}'s google music library has been added as a library, now syncing ...", username));
-                    break;
-
-                default:
-                    InvalidAddLibraryCommand(client, replyTarget);
-                    return;
-            }
-        }
-
-        const char Delimiter = '"';
-        private IList<string> NormalizeParameters(IList<string> parameters)
-        {
-            var list = new List<string>();
-            string partial = null;
-            foreach (var p in parameters)
-            {
-                if (string.IsNullOrWhiteSpace(p))
-                    continue;
-
-
-                if (partial != null)
-                {
-                    partial += " " + p;
-
-                    if (partial.Last() == Delimiter)
-                    {
-                        list.Add(partial.Substring(0, partial.Length - 1));
-                        partial = null;
-                    }
-                    continue;
-                }
-
-                if (p[0] == Delimiter)
-                {
-                    if (p.Last() != Delimiter)
-                    {
-                        partial = p.Substring(1);
-                        continue;
-                    }
-
-                    list.Add(p.Substring(1, p.Length - 2));
-                    continue;
-                }
-
-                list.Add(p);
-            }
-
-            if (partial != null)
-                throw new ArgumentOutOfRangeException("parameters", partial, "Missing final delimiter for argument");
-
-            return list;
-        }
-
-        private static void InvalidAddLibraryCommand(IrcDotNet.IrcClient client, IList<IrcDotNet.IIrcMessageTarget> replyTarget)
-        {
-            client.LocalUser.SendMessage(replyTarget, "Invalid command");
-            client.LocalUser.SendMessage(replyTarget, ".add-library folder \"path\"");
-            client.LocalUser.SendMessage(replyTarget, ".add-library google \"username\" \"password\"");
         }
 
         private void ProcessChatCommandHelp(IrcDotNet.IrcClient client, IrcDotNet.IIrcMessageSource source, IList<IrcDotNet.IIrcMessageTarget> targets, string command, IList<string> parameters)
@@ -319,9 +82,8 @@ namespace MusicHub.ConsoleApp
                 throw new InvalidCommandParametersException(1);
 
             // List all commands recognized by this bot.
-            var replyTarget = GetDefaultReplyTarget(client, source, targets);
-            client.LocalUser.SendMessage(replyTarget, "Commands recognized by bot:");
-            client.LocalUser.SendMessage(replyTarget, string.Join(", ",
+            client.LocalUser.SendMessage(targets, "Commands recognized by bot:");
+            client.LocalUser.SendMessage(targets, string.Join(", ",
                 this.ChatCommandProcessors.Select(kvPair => kvPair.Key)));
         }
 
@@ -380,6 +142,15 @@ namespace MusicHub.ConsoleApp
             say("The dev team 3 music bot welcomes you!");
             say(string.Format("To listen to the stream, point your media player at 'http://{0}:{1}/'", Environment.MachineName, MusicHub.BassNet.BassNetMediaPlayer.PortNumber));
             say("For more instructions, type '.help'. Remember to message me directly and not in the chat channel!");
+
+            var libraries = this._libraryRepository.GetLibrariesForUser(user.Id);
+            var brokenLibraries = libraries.Where(l => !string.IsNullOrWhiteSpace(l.ErrorMessage));
+            foreach (var library in brokenLibraries)
+            {
+                say(string.Format("The connection to '{0}' failed!", library.Name));
+                say(string.Format("The error message was: {0}", library.ErrorMessage));
+                say(string.Format("After you fix the problem, say '.sync-library {0}' to get the music going again", library.Id));
+            }
         }
 
         protected override void OnChannelNoticeReceived(IrcDotNet.IrcChannel channel, IrcDotNet.IrcMessageEventArgs e)

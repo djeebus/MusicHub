@@ -51,7 +51,7 @@ namespace IrcDotNet.Samples.Common
             get { return null; }
         }
 
-        protected IDictionary<string, ChatCommandProcessor> ChatCommandProcessors
+        public IDictionary<string, ChatCommandProcessor> ChatCommandProcessors
         {
             get { return this.chatCommandProcessors; }
         }
@@ -347,7 +347,20 @@ namespace IrcDotNet.Samples.Common
 
         #endregion
 
-        protected IList<IIrcMessageTarget> GetDefaultReplyTarget(IrcClient client, IIrcMessageSource source,
+        protected IrcClient GetClientFromServerNameMask(string serverNameMask)
+        {
+            return this.Clients.Single(c => c.ServerName != null &&
+                Regex.IsMatch(c.ServerName, serverNameMask, RegexOptions.IgnoreCase));
+        }
+
+        public delegate void ChatCommandProcessor(IrcClient client, IIrcMessageSource source,
+            IList<IIrcMessageTarget> targets, string command, IList<string> parameters);
+
+        protected delegate void CommandProcessor(string command, IList<string> parameters);
+
+        protected IList<IIrcMessageTarget> GetDefaultReplyTarget(
+            IrcClient client,
+            IIrcMessageSource source,
             IList<IIrcMessageTarget> targets)
         {
             if (targets.Contains(client.LocalUser) && source is IIrcMessageTarget)
@@ -355,16 +368,5 @@ namespace IrcDotNet.Samples.Common
             else
                 return targets;
         }
-
-        protected IrcClient GetClientFromServerNameMask(string serverNameMask)
-        {
-            return this.Clients.Single(c => c.ServerName != null &&
-                Regex.IsMatch(c.ServerName, serverNameMask, RegexOptions.IgnoreCase));
-        }
-
-        protected delegate void ChatCommandProcessor(IrcClient client, IIrcMessageSource source,
-            IList<IIrcMessageTarget> targets, string command, IList<string> parameters);
-
-        protected delegate void CommandProcessor(string command, IList<string> parameters);
     }
 }
