@@ -27,7 +27,7 @@ namespace MusicHub.ConsoleApp.BotCommands
             var currentSong = _jukebox.CurrentSong;
             var currentUser = _userRepository.EnsureUser(source.Name, null);
 
-            if (currentSong.UserId == currentUser.Id)
+            if (currentSong.UserId != currentUser.Id)
             {
                 foreach (var target in targets)
                     client.LocalUser.SendMessage(target, "You can only skip your songs");
