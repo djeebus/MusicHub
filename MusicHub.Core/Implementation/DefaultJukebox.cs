@@ -14,10 +14,12 @@ namespace MusicHub.Implementation
         private readonly IMusicLibraryFactory _musicLibraryFactory;
         private readonly ISongRepository _songRepository;
         private readonly IAffinityTracker _affinityTracker;
+        private readonly IUserRepository _userRepository;
         private readonly SongSpider _spider;
 
         private List<string> _haters = new List<string>();
 
+        public event EventHandler<SongEventArgs> SongStarting;
         public event EventHandler<SongEventArgs> SongStarted;
         public event EventHandler<SongEventArgs> SongFinished;
 
@@ -33,6 +35,7 @@ namespace MusicHub.Implementation
             ILibraryRepository libraryRepository,
             ISongRepository songRepository,
             IAffinityTracker affinityTracker,
+            IUserRepository userRepository,
             SongSpider spider)
         {
             _mediaPlayer = mediaPlayer;
@@ -41,6 +44,7 @@ namespace MusicHub.Implementation
             _songRepository = songRepository;
             _spider = spider;
             _affinityTracker = affinityTracker;
+            _userRepository = userRepository;
 
             _mediaPlayer.SongFinished += _mediaPlayer_SongFinished;
 
@@ -63,6 +67,14 @@ namespace MusicHub.Implementation
             }
         }
 
+        private void OnSongStarting(Song song)
+        {
+            var handler = this.SongStarting;
+            if (handler != null)
+                handler(this, new SongEventArgs(song));
+        }
+
+
         private void OnSongStarted(Song song)
         {
             var handler = this.SongStarted;
@@ -83,6 +95,8 @@ namespace MusicHub.Implementation
         private void _mediaPlayer_SongFinished(object sender, EventArgs e)
         {
             var currentSong = this.CurrentSong;
+            if (currentSong == null)
+                return;
 
             this._songRepository.MarkAsPlayed(currentSong.Id);
             this._libraryRepository.MarkAsPlayed(currentSong.LibraryId, true);
@@ -130,6 +144,9 @@ namespace MusicHub.Implementation
             var libraryInfo = _libraryRepository.GetLibrary(song.LibraryId);
             var library = _musicLibraryFactory.Create(libraryInfo);
             var songUrl = library.GetSongUrl(song.ExternalId);
+
+            this.OnSongStarting(song);
+
             _mediaPlayer.PlaySong(song, songUrl);
 
             this.OnSongStarted(song);
@@ -147,9 +164,11 @@ namespace MusicHub.Implementation
             return (int)Math.Ceiling(currentListeners * .5m);
         }
 
-        public HateResult Hate(string userId, int currentListeners)
+        public HateResult Hate(string userId)
         {
-            var hatersNeeded = GetHatersNeededToSkip(currentListeners);
+            var currentListeners = _userRepository.GetOnlineUsers();
+
+            var hatersNeeded = GetHatersNeededToSkip(currentListeners.Length);
 
             // bail if user has already hated the song
             if (_haters.Contains(userId))
@@ -226,6 +245,6 @@ namespace MusicHub.Implementation
         public Song[] FindSongs(SearchType type, string term)
         {
             throw new NotImplementedException();
-        }
+        }        
     }
 }

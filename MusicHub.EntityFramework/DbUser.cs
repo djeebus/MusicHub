@@ -23,6 +23,8 @@ namespace MusicHub.EntityFramework
         public bool IsAvailable { get; set; }
 
         public virtual ICollection<DbConnection> Connections { get; set; }
+        public virtual ICollection<DbLibrary> Libraries { get; set; }
+        public virtual ICollection<DbSongAffinity> Feelings { get; set; }
 
         internal User ToModel()
         {

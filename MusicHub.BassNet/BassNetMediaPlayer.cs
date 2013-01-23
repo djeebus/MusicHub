@@ -20,19 +20,21 @@ namespace MusicHub.BassNet
         private int _serverHandle;
         private int _mixerStreamId;
 
+        private int _sampleFrequency = 48000;
+        private int _httpBitrate = 320;
 
         public BassNetMediaPlayer()
         {
-            InitBass();
-            InitBassMixer();
-            InitBassEncoder();
-            InitBassServer();
+            InitBass(_sampleFrequency);
+            InitBassMixer(_sampleFrequency);
+            InitBassEncoder(_sampleFrequency, _httpBitrate);
+            InitBassServer(PortNumber);
 
             _syncCallback = SyncCallback;
             myClientProc = clientProc;
         }
 
-        private static void InitBass()
+        private static void InitBass(int sampleFrequency)
         {
             var currentFolder = Directory.GetCurrentDirectory();
             var pluginFolder = Path.Combine(currentFolder, "plugins");
@@ -40,25 +42,25 @@ namespace MusicHub.BassNet
             foreach (var plugin in Directory.GetDirectories(currentFolder, "bass*.dll"))
             {
                 if (Path.GetFileName(plugin).ToLower() == "bass.dll")
-                    continue;
+                    continue; // no need to load the root dll as a plugin
 
                 var errorCode = Bass.BASS_PluginLoad(plugin);
                 if (errorCode != 0)
                     throw new BassException(errorCode);
             }
 
-            if (!Bass.BASS_Init(-1, 44100, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero))
+            if (!Bass.BASS_Init(-1, sampleFrequency, BASSInit.BASS_DEVICE_DEFAULT, IntPtr.Zero))
                 throw new BassException();
         }
 
-        private void InitBassEncoder()
+        private void InitBassEncoder(int frequency, int bitrate)
         {
             var currentFolder = Directory.GetCurrentDirectory();
             var lamePath = Path.Combine(currentFolder, "lame.exe");
 
             _encoderHandle = BassEnc.BASS_Encode_Start(
                 _mixerStreamId,
-                string.Format(@"{0} -r -s 44100 -b 128 -", lamePath),
+                string.Format(@"{0} -r -s {1} -b {2} -", lamePath, frequency, bitrate),
                 BASSEncode.BASS_ENCODE_NOHEAD,
                 null,
                 IntPtr.Zero);
@@ -67,11 +69,11 @@ namespace MusicHub.BassNet
                 throw new BassException();
         }
 
-        private void InitBassMixer()
+        private void InitBassMixer(int sampleFrequency)
         {
             
             _mixerStreamId = BassMix.BASS_Mixer_StreamCreate(
-                44100,
+                sampleFrequency,
                 2,
                 BASSFlag.BASS_DEFAULT);
             if (_mixerStreamId == 0)
@@ -81,11 +83,11 @@ namespace MusicHub.BassNet
                 throw new BassException();           
         }
 
-        private void InitBassServer()
+        private void InitBassServer(int portNumber)
         {
             this._serverHandle = BassEnc.BASS_Encode_ServerInit(
                 _encoderHandle,
-                PortNumber.ToString(),
+                portNumber.ToString(),
                 64 * 1024,
                 64 * 1024,
                 BASSEncodeServer.BASS_ENCODE_SERVER_DEFAULT,
@@ -116,7 +118,7 @@ namespace MusicHub.BassNet
             else
                 streamId = Bass.BASS_StreamCreateFile(mediaUrl, 0, 0, BASSFlag.BASS_STREAM_DECODE);
 
-            if (streamId == 0)
+            if (streamId <= 0)
                 throw new BassException();
 
             if (!BassMix.BASS_Mixer_StreamAddChannel(_mixerStreamId, streamId, BASSFlag.BASS_DEFAULT))
@@ -125,7 +127,7 @@ namespace MusicHub.BassNet
             _currentSongStreamId = streamId;
 
             var syncId = Bass.BASS_ChannelSetSync(streamId, BASSSync.BASS_SYNC_END, 0, _syncCallback, IntPtr.Zero);
-            if (syncId == 0)
+            if (syncId <= 0)
                 throw new BassException();
         }
 

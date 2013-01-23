@@ -41,5 +41,82 @@ namespace MusicHub.EntityFramework
 
             this._context.SaveChanges();
         }
+
+        const int CountForMostQueries = 3;
+
+        IQueryable<string> GetOrderedArtistsQuery()
+        {
+            return from s in this._context.Songs
+                   group s by s.Artist into artist
+                   orderby artist.Sum(s => s.Feelings.Sum(f => f.IsLove ? 1 : -1))
+                   select artist.Key;
+        }
+
+        public string[] GetMostLovedArtists()
+        {
+            return GetOrderedArtistsQuery()
+                .Take(CountForMostQueries)
+                .ToArray();
+        }
+
+        public string[] GetMostHatedArtists()
+        {
+            return GetOrderedArtistsQuery()
+                .Reverse()
+                .Take(CountForMostQueries)
+                .ToArray();
+        }
+
+        private IQueryable<DbUser> GetOrderedxxxedQuery()
+        {
+            return from u in _context.Users
+                   orderby u.Libraries.Sum(l => l.Songs.Sum(s => s.Feelings.Sum(f => f.IsLove ? 1 : -1)))
+                   select u;
+        }
+
+        public User[] GetMostLovedUsers()
+        {
+            return GetOrderedxxxedQuery()
+                .Take(CountForMostQueries)
+                .AsEnumerable()
+                .Select(u => u.ToModel())
+                .ToArray();
+        }
+
+        public User[] GetMostHatedUsers()
+        {
+            return GetOrderedxxxedQuery()
+                .Reverse()
+                .Take(CountForMostQueries)
+                .AsEnumerable()
+                .Select(u => u.ToModel())
+                .ToArray();
+        }
+
+        private IOrderedQueryable<DbUser> GetOrderedxxxingQuery()
+        {
+            return from u in _context.Users
+                   orderby u.Feelings.Sum(f => f.IsLove ? 1 : -1)
+                   select u;
+        }
+
+        public User[] GetMostLovingUsers()
+        {
+            return GetOrderedxxxingQuery()
+                .Take(CountForMostQueries)
+                .AsEnumerable()
+                .Select(u => u.ToModel())
+                .ToArray();
+        }
+
+        public User[] GetMostHatingUsers()
+        {
+            return GetOrderedxxxingQuery()
+                .Reverse()
+                .Take(CountForMostQueries)
+                .AsEnumerable()
+                .Select(u => u.ToModel())
+                .ToArray();
+        }
     }
 }

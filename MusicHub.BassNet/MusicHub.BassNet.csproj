@@ -43,7 +43,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BassException.cs" />
-    <Compile Include="BassNetHttpServer.cs" />
     <Compile Include="BassNetMediaPlayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -51,6 +50,10 @@
     <ProjectReference Include="..\MusicHub.Core\MusicHub.Core.csproj">
       <Project>{041a5fe8-9561-4929-951c-0a861733ea68}</Project>
       <Name>MusicHub.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MusicHub.MicrosoftTextToSpeech\MusicHub.MicrosoftTextToSpeech.csproj">
+      <Project>{c1ab0efd-a6df-44c0-aba1-f5f08ec838f1}</Project>
+      <Name>MusicHub.MicrosoftTextToSpeech</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

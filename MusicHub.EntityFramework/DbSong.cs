@@ -31,6 +31,8 @@ namespace MusicHub.EntityFramework
         public DateTime? LastPlayed { get; set; }
         public long PlayCount { get; set; }
 
+        public virtual ICollection<DbSongAffinity> Feelings { get; set; }
+
         internal Song ToModel()
         {
             return new Song

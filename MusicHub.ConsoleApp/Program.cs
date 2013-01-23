@@ -23,6 +23,7 @@ namespace MusicHub.ConsoleApp
                 new MusicHubNinjectModule());
 
             var bot = kernel.Get<MusicHubBot>();
+            var speaker = kernel.Get<MusicHub.MicrosoftTextToSpeech.SongAnnouncer>();
             bot.ClientDisconnect += bot_ClientDisconnect;
 
             bot.Connect(

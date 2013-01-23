@@ -15,6 +15,7 @@ namespace MusicHub.Core.Tests
         Mock<ISongRepository> _songRepository = new Mock<ISongRepository>();
         Mock<IAffinityTracker> _affinityTracker = new Mock<IAffinityTracker>();
         Mock<SongSpider> _songSpider = new Mock<SongSpider>();
+        Mock<IUserRepository> _userRepository = new Mock<IUserRepository>();
 
         protected virtual DefaultJukebox CreateJukebox()
         {
@@ -24,6 +25,7 @@ namespace MusicHub.Core.Tests
                 _libraryRepository.Object,
                 _songRepository.Object,
                 _affinityTracker.Object,
+                _userRepository.Object,
                 new SongSpider(_libraryRepository.Object, _songRepository.Object, _musicLibraryFactory.Object));
         }
 

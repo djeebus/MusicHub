@@ -55,10 +55,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BotCommands\AddLibrary.cs" />
+    <Compile Include="BotCommands\BaseCommand.cs" />
+    <Compile Include="BotCommands\MostLovedUsers.cs" />
+    <Compile Include="BotCommands\MostHatedUsers.cs" />
+    <Compile Include="BotCommands\MostHatedArtists.cs" />
+    <Compile Include="BotCommands\DeleteLibrary.cs" />
+    <Compile Include="BotCommands\Hate.cs" />
+    <Compile Include="BotCommands\ICommand.cs" />
+    <Compile Include="BotCommands\ListLibraries.cs" />
+    <Compile Include="BotCommands\Love.cs" />
+    <Compile Include="BotCommands\Skip.cs" />
+    <Compile Include="BotCommands\Play.cs" />
+    <Compile Include="BotCommands\Stop.cs" />
+    <Compile Include="BotCommands\SyncLibrary.cs" />
+    <Compile Include="BotCommands\MostLovedArtists.cs" />
     <Compile Include="Irc\ConsoleUtilities.cs" />
     <Compile Include="Irc\Extensions.cs" />
     <Compile Include="Irc\InvalidCommandParametersException.cs" />
     <Compile Include="Irc\IrcBot.cs" />
+    <Compile Include="Irc\IrcHelper.cs" />
     <Compile Include="MusicHubBot.cs" />
     <Compile Include="MusicHubNinjectModule.cs" />
     <Compile Include="MusicLibraryFactory.cs" />
@@ -85,6 +101,10 @@
     <ProjectReference Include="..\MusicHub.GooglePlay\MusicHub.GooglePlay.csproj">
       <Project>{a373cb67-df1b-443f-bc41-c58ff0652bd7}</Project>
       <Name>MusicHub.GooglePlay</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MusicHub.MicrosoftTextToSpeech\MusicHub.MicrosoftTextToSpeech.csproj">
+      <Project>{c1ab0efd-a6df-44c0-aba1-f5f08ec838f1}</Project>
+      <Name>MusicHub.MicrosoftTextToSpeech</Name>
     </ProjectReference>
     <ProjectReference Include="..\MusicHub.TagLibSharp\MusicHub.TagLibSharp.csproj">
       <Project>{7536df7c-6baa-4bfc-9a8a-f1618e78a0cf}</Project>

@@ -18,7 +18,7 @@ namespace MusicHub.Core.Tests
         {
             var jukebox = this.CreateJukebox();
 
-            _result = jukebox.Hate(_userId, 3);
+            _result = jukebox.Hate(_userId);
         }
 
         [TestMethod]
