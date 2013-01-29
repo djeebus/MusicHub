@@ -1,31 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Speech.AudioFormat;
 using System.Speech.Synthesis;
 using System.Text;
+using System.Threading;
 
 namespace MusicHub.MicrosoftTextToSpeech
 {
     public class SongAnnouncer
     {
         private readonly IJukebox _jukebox;
-        private readonly SpeechSynthesizer _speaker;
+        private readonly IMediaPlayer _mediaPlayer;
 
         private readonly SpeechAudioFormatInfo _audioFormat = new SpeechAudioFormatInfo(
-            32000,
+            48000,
             AudioBitsPerSample.Sixteen,
-            AudioChannel.Mono);
+            AudioChannel.Stereo);
+        //private readonly SpeechAudioFormatInfo _audioFormat = new SpeechAudioFormatInfo(
+        //    EncodingFormat.Pcm,
+        //    48000,
+        //    16,
+        //    2,
+        //    320 * (1024 / 8),
+        //    32,
+        //    new byte[0]);
 
 
-        public SongAnnouncer(IJukebox jukebox)
+        public SongAnnouncer(IJukebox jukebox, IMediaPlayer mediaPlayer)
         {
             this._jukebox = jukebox;
+            this._mediaPlayer = mediaPlayer;
 
             this._jukebox.SongStarting += _jukebox_SongStarting;
-
-            this._speaker = new SpeechSynthesizer();
         }
 
         string[] _scripts = new[] {
@@ -49,25 +58,55 @@ namespace MusicHub.MicrosoftTextToSpeech
             return sb.ToString();
         }
 
+        private string _lastTempFile = null;
         void _jukebox_SongStarting(object sender, SongEventArgs e)
         {
+            if (_lastTempFile != null)
+            {
+                if (File.Exists(_lastTempFile))
+                    File.Delete(_lastTempFile);
+
+                _lastTempFile = null;
+            }
+
             var script = GetScript(e.Song);
 
             var prompt = new Prompt(script, SynthesisTextFormat.Text);
 
             var tempFile = Path.GetTempFileName();
 
-            using (var outputStream = File.OpenWrite(tempFile))
+            using (var speaker = new SpeechSynthesizer())
             {
-                this._speaker.SetOutputToAudioStream(
-                    outputStream,
+                speaker.SetOutputToWaveFile(
+                    tempFile,
                     this._audioFormat);
 
-                _speaker.Speak(prompt);
+                speaker.Speak(prompt);
             }
 
-            File.Delete(tempFile);
-            this._speaker.SetOutputToNull();
+            this._mediaPlayer.PlaySong(null, tempFile);
+
+            using (var mre = new ManualResetEvent(false))
+            {
+                var handler = new EventHandler((s, args) => mre.Set());
+
+                this._mediaPlayer.SongFinished += handler;
+                try
+                {
+                    this._mediaPlayer.PlaySong(null, tempFile);
+                    mre.WaitOne();
+                }
+                catch (Exception ex)
+                {
+                    Trace.WriteLine(string.Format("Error playing prompt: {0}", ex), "SongAnnouncer");
+                }
+                finally
+                {
+                    this._mediaPlayer.SongFinished -= handler;
+                }
+            }
+
+            _lastTempFile = tempFile;
         }
     }
 }

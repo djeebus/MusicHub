@@ -87,6 +87,9 @@ namespace MusicHub.Implementation
 
         private void OnSongFinished(Song song)
         {
+            if (song == null)
+                return;
+
             var handler = this.SongFinished;
             if (handler != null)
                 handler(this, new SongEventArgs(song));
@@ -115,6 +118,9 @@ namespace MusicHub.Implementation
         public void SkipTrack()
         {
             var currentSong = this.CurrentSong;
+
+            if (currentSong != null)
+                _libraryRepository.MarkAsPlayed(currentSong.LibraryId, true);
 
             while (true)
             {

@@ -36,6 +36,8 @@ namespace MusicHub.ConsoleApp
             _kernel = kernel;
 
             _jukebox.SongStarted += _jukebox_SongStarted;
+
+            InitializeChatCommandProcessors();
         }
 
         void _jukebox_SongStarted(object sender, SongEventArgs e)
@@ -64,10 +66,17 @@ namespace MusicHub.ConsoleApp
         {
         }
 
-        private readonly List<BotCommands.ICommand> _commands = new List<BotCommands.ICommand>();
+        private List<BotCommands.ICommand> _commands;
         protected override void InitializeChatCommandProcessors()
         {
-            _commands.AddRange(new BotCommands.ICommand[] {
+            if (_kernel == null)
+                return;
+
+            if (_commands != null)
+                return;
+
+            _commands = new List<BotCommands.ICommand>
+            {
                 _kernel.Get<BotCommands.AddLibrary>(),
                 _kernel.Get<BotCommands.DeleteLibrary>(),
                 _kernel.Get<BotCommands.Hate>(),
@@ -77,7 +86,7 @@ namespace MusicHub.ConsoleApp
                 _kernel.Get<BotCommands.Play>(),
                 _kernel.Get<BotCommands.Stop>(),
                 _kernel.Get<BotCommands.SyncLibrary>(),
-            });
+            };
 
             foreach (var command in _commands)
                 this.ChatCommandProcessors.Add(command.Command, command.ExecuteCommand);

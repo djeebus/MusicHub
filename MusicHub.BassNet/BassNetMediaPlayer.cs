@@ -118,21 +118,26 @@ namespace MusicHub.BassNet
             else
                 streamId = Bass.BASS_StreamCreateFile(mediaUrl, 0, 0, BASSFlag.BASS_STREAM_DECODE);
 
-            if (streamId <= 0)
+            if (streamId == 0)
                 throw new BassException();
 
-            if (!BassMix.BASS_Mixer_StreamAddChannel(_mixerStreamId, streamId, BASSFlag.BASS_DEFAULT))
+            if (!BassMix.BASS_Mixer_StreamAddChannel(_mixerStreamId, streamId, BASSFlag.BASS_DEFAULT | BASSFlag.BASS_MUSIC_AUTOFREE))
                 throw new BassException();
 
             _currentSongStreamId = streamId;
 
             var syncId = Bass.BASS_ChannelSetSync(streamId, BASSSync.BASS_SYNC_END, 0, _syncCallback, IntPtr.Zero);
-            if (syncId <= 0)
+            if (syncId == 0)
                 throw new BassException();
         }
 
         private void SyncCallback(int handle, int channel, int data, IntPtr user)
         {
+            if (!BassMix.BASS_Mixer_ChannelRemove(_currentSongStreamId.Value))
+                throw new BassException();
+
+            _currentSongStreamId = null;
+
             this.OnSongFinished();
         }
 
@@ -141,10 +146,10 @@ namespace MusicHub.BassNet
             if (!_currentSongStreamId.HasValue)
                 return;
 
-            Trace.WriteLine("Stopping current song", "BassNetMediaPlayer");
-
             if (!BassMix.BASS_Mixer_ChannelRemove(_currentSongStreamId.Value))
                 throw new BassException();
+
+            Trace.WriteLine("Stopping current song", "BassNetMediaPlayer");
 
             _currentSongStreamId = null;
         }
