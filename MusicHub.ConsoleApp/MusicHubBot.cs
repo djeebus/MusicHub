@@ -18,6 +18,7 @@ namespace MusicHub.ConsoleApp
         private readonly IMediaPlayer _mediaPlayer;
         private readonly IJukebox _jukebox;
         private readonly IKernel _kernel;
+        private readonly SongSpider _spider;
 
         public MusicHubBot(
             IJukebox jukebox,
@@ -26,7 +27,8 @@ namespace MusicHub.ConsoleApp
             IMediaPlayer mediaPlayer,
             ISongRepository songRepository,
             IMetadataService metadataService, 
-            IKernel kernel)
+            IKernel kernel,
+            SongSpider spider)
         {
             _jukebox = jukebox;
             _userRepository = userRepository;
@@ -34,6 +36,7 @@ namespace MusicHub.ConsoleApp
             _mediaPlayer = mediaPlayer;
             _libraryRepository = libraryRepository;
             _kernel = kernel;
+            _spider = spider;
 
             _jukebox.SongStarted += _jukebox_SongStarted;
 
@@ -150,6 +153,8 @@ namespace MusicHub.ConsoleApp
 
                 var user = this._userRepository.EnsureUser(chanUser.User.NickName, null);
                 this._userRepository.MarkAsOnline(user.Id, true);
+
+                TriggerBrokenLibrarySpidering(user);
             }
 
             this._jukebox.Play();
@@ -193,6 +198,11 @@ namespace MusicHub.ConsoleApp
             say(string.Format("To listen to the stream, point your media player at 'http://{0}:{1}/'", Environment.MachineName, MusicHub.BassNet.BassNetMediaPlayer.PortNumber));
             say("For more instructions, type '.help'. Remember to message me directly and not in the chat channel!");
 
+            TriggerBrokenLibrarySpidering(user);
+        }
+
+        private void TriggerBrokenLibrarySpidering(User user)
+        {
             var libraries = _libraryRepository.GetLibrariesForUser(user.Id);
             if (libraries == null)
                 return;
@@ -202,11 +212,7 @@ namespace MusicHub.ConsoleApp
                 return;
 
             foreach (var library in brokenLibraries)
-            {
-                say(string.Format("The {0} library: '{1}' is broken with the following error:", library.Type, library.Name));
-                say(library.ErrorMessage);
-                say(string.Format("After you fix the error, type '.sync-library {0}'", library.Id));
-            }
+                _spider.QueueLibrary(library);
         }
 
         protected override void OnChannelNoticeReceived(IrcDotNet.IrcChannel channel, IrcDotNet.IrcMessageEventArgs e)
