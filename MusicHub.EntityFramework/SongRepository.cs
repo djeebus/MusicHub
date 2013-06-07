@@ -20,19 +20,19 @@ namespace MusicHub.EntityFramework
             this._db = db;
         }
 
+        const string pruneSongsQuery = @"
+DELETE Songs
+FROM Songs s
+    JOIN Library l ON s.LibraryId = l.LibraryId
+WHERE s.LibraryId = @libraryId 
+  AND s.LastSeen < l.LastSync";
         public void PruneSongs(string libraryId)
         {
-            var guid = Guid.Parse(libraryId);
+            var result = this._db.Database.ExecuteSqlCommand(
+                pruneSongsQuery,
+                new SqlParameter("@libraryId", libraryId));
 
-            var dbSongs = from s in _db.Songs
-                          where s.Library.LastSync.HasValue &&
-                                s.LastSeen < s.Library.LastSync
-                          select s;
-
-            foreach (var song in dbSongs)
-                this._db.Songs.Remove(song);
-
-            this._db.SaveChanges();
+            Trace.WriteLine(string.Format("Pruned {0} songs", result), "SongRepository");
         }
 
         public Song UpsertSong(string libraryId, string externalId, string artist, string title, string album, uint? track, uint? year)

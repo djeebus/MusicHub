@@ -21,9 +21,9 @@ namespace Website.App_Start
 
         private static void BeginUpdatingLibraries()
         {
-            var resolver = DependencyResolver.Current;
+            //var resolver = DependencyResolver.Current;
 
-            var jukebox = resolver.GetService<MusicHub.IJukebox>();
+            //var jukebox = resolver.GetService<MusicHub.IJukebox>();
 
             //var factory = resolver.GetService<Models.MediaLibraryFactory>();
 

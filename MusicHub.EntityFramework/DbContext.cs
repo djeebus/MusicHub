@@ -20,9 +20,10 @@ namespace MusicHub.EntityFramework
         public DbSet<DbSong> Songs { get; set; }
         public DbSet<DbSongAffinity> SongAffinities { get; set; }
 
-        public DbContext()
+        public bool AutoDetectChangesEnabled
         {
-            //this.Configuration.AutoDetectChangesEnabled = false;
+            get { return this.Configuration.AutoDetectChangesEnabled; }
+            set { this.Configuration.AutoDetectChangesEnabled = value; }
         }
     }
 }

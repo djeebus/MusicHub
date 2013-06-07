@@ -1,0 +1,3 @@
+[submodule "daap-sharp"]
+	path = daap-sharp
+	url = https://github.com/mono/daap-sharp.git

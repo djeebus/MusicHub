@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EE99F77E-5B35-4604-965F-E628BB235790}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MusicHub.ITunes</RootNamespace>
+    <AssemblyName>MusicHub.ITunes</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>..\packages\ICSharpCode.SharpZipLib.0.86.0.518\lib\net20\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Zeroconf">
+      <HintPath>..\packages\Mono.Zeroconf.0.9.0.0\lib\Net20\Mono.Zeroconf.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Zeroconf.Providers.Bonjour">
+      <HintPath>..\packages\Mono.Zeroconf.0.9.0.0\lib\Net20\Mono.Zeroconf.Providers.Bonjour.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\daap-sharp\src\AuthenticationException.cs">
+      <Link>daap-sharp\AuthenticationException.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\BrokenMD5.cs">
+      <Link>daap-sharp\BrokenMD5.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\Client.cs">
+      <Link>daap-sharp\Client.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\ContentCodeBag.cs">
+      <Link>daap-sharp\ContentCodeBag.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\ContentFetcher.cs">
+      <Link>daap-sharp\ContentFetcher.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\ContentParser.cs">
+      <Link>daap-sharp\ContentParser.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\ContentWriter.cs">
+      <Link>daap-sharp\ContentWriter.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\Database.cs">
+      <Link>daap-sharp\Database.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\Hasher.cs">
+      <Link>daap-sharp\Hasher.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\LoginException.cs">
+      <Link>daap-sharp\LoginException.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\Playlist.cs">
+      <Link>daap-sharp\Playlist.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\Server.cs">
+      <Link>daap-sharp\Server.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\ServerInfo.cs">
+      <Link>daap-sharp\ServerInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\ServiceLocator.cs">
+      <Link>daap-sharp\ServiceLocator.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\Track.cs">
+      <Link>daap-sharp\Track.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\User.cs">
+      <Link>daap-sharp\User.cs</Link>
+    </Compile>
+    <Compile Include="..\daap-sharp\src\Utility.cs">
+      <Link>daap-sharp\Utility.cs</Link>
+    </Compile>
+    <Compile Include="ITunesMediaLibrary.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MusicHub.Core\MusicHub.Core.csproj">
+      <Project>{041a5fe8-9561-4929-951c-0a861733ea68}</Project>
+      <Name>MusicHub.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="daap-sharp\content-codes" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
